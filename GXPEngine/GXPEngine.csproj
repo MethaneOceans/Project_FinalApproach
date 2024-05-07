@@ -41,13 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Circle.cs" />
     <Compile Include="Control\Scene.cs" />
     <Compile Include="Control\SceneManager.cs" />
+    <Compile Include="GameObjects\LaserEmitter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="GXPEngine\AddOns\Gizmos.cs" />
     <Compile Include="GXPEngine\AddOns\SpriteBatch.cs" />
     <Compile Include="GXPEngine\AddOns\TiledLoader.cs" />
+    <Compile Include="MathClasses\Circle.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="GXPEngine\Core\Canvas.cs" />
     <Compile Include="GXPEngine\Game.cs" />
@@ -86,9 +87,9 @@
     <Compile Include="GXPEngine\FMOD\FMODSoundSystem.cs" />
     <Compile Include="GXPEngine\SoLoud\Soloud.cs" />
     <Compile Include="GXPEngine\SoLoud\SoloudSoundSystem.cs" />
-    <Compile Include="MathUtils.cs" />
-    <Compile Include="Ray.cs" />
-    <Compile Include="RayDrawn.cs" />
+    <Compile Include="MathClasses\MathUtils.cs" />
+    <Compile Include="MathClasses\Ray.cs" />
+    <Compile Include="GameObjects\Catapult.cs" />
     <Compile Include="Scenes\TestLevel.cs" />
   </ItemGroup>
   <ItemGroup>
