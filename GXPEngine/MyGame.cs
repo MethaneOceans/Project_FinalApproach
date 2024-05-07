@@ -2,6 +2,7 @@ using System;                                   // System contains a lot of defa
 using System.Drawing;
 using GXPEngine;                                // GXPEngine contains the engine
 using GXPEngine.Control;
+using GXPEngine.OpenGL;
 using GXPEngine.Scenes;                           // System.Drawing contains drawing tools such as Color definitions
 
 /// <summary>
@@ -16,7 +17,8 @@ public class MyGame : Game {
 	{
 		sceneManager = new SceneManager(this);
 		sceneManager.AddScene("RayTest", new TestLevel());
-		
+
+		GL.glfwSetWindowTitle("Wizard with a laser!");
 
 		// Show the fps
 		fpsCounter = new EasyDraw(200, 50);
