@@ -40,9 +40,6 @@ namespace GXPEngine
 			Fill(Color.Blue);
 			Ellipse((width - 1) / 2f, (height - 1) / 2f, radius * 2, radius * 2);
 		}
-		public float RayIntersect(Ray ray)
-		{
-
-		}
+		
 	}
 }

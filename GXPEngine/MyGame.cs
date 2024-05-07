@@ -15,7 +15,7 @@ public class MyGame : Game {
 	public MyGame() : base(1200, 800, pFullScreen: false, pPixelArt: true)
 	{
 		sceneManager = new SceneManager(this);
-		sceneManager.AddScene("RayTest", new RayTest());
+		sceneManager.AddScene("RayTest", new TestLevel());
 		
 
 		// Show the fps
