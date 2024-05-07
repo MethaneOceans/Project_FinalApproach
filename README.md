@@ -19,12 +19,12 @@
 - Maybe the "prism" should use actual refraction or just emit lasers perpendicular to the edges
 
 ## TODO
-[ ] - Raycasting
-[ ] - Drawing the ray on the screen
-[ ] - Kinematics update method (just euler)
-[ ] - Win state trigger if goals are all hit
-[ ] - Create "Prism" object
-[ ] - Shoot a new prism
-[ ] - Lock the prism in place
-[ ] - Rotate the prism
-[ ] - Cast new rays from prism object
+- [ ] - Raycasting
+- [ ] - Drawing the ray on the screen
+- [ ] - Kinematics update method (just euler)
+- [ ] - Win state trigger if goals are all hit
+- [ ] - Create "Prism" object
+- [ ] - Shoot a new prism
+- [ ] - Lock the prism in place
+- [ ] - Rotate the prism
+- [ ] - Cast new rays from prism object
