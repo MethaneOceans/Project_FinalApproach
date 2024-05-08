@@ -28,9 +28,9 @@ namespace GXPEngine.Scenes
 			player = new Circle(new Vector2(width / 2, height / 2), playerRadius);
 			AddChild(player);
 
-			float minAngle = -30;
+			float minAngle = -50;
 			float maxAngle = -minAngle;
-			int numRays = 20;
+			int numRays = 50;
 			float angleStep = Abs(minAngle - maxAngle) / numRays;
 
 			rays = new List<(RayDrawn ray, float angleOffset)>();

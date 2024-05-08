@@ -16,7 +16,8 @@ public class MyGame : Game {
 	{
 		sceneManager = new SceneManager(this);
 		sceneManager.AddScene("RayTest", new RayTest());
-		
+
+		targetFps = int.MaxValue;
 
 		// Show the fps
 		fpsCounter = new EasyDraw(200, 50);
