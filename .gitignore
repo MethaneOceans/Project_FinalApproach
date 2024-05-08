@@ -1,6 +1,14 @@
 
+<<<<<<< Updated upstream
 GXPEngine/.vs/
 
 GXPEngine/bin/
 
 GXPEngine/obj/
+=======
+GXPEngine/obj/
+
+GXPEngine/bin/
+
+GXPEngine/.vs/
+>>>>>>> Stashed changes
