@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using static GXPEngine.Mathf;
 
-namespace GXPEngine.GameObjects
+namespace GXPEngine
 {
 	internal class LaserEmitter : GameObject
 	{
@@ -45,6 +45,11 @@ namespace GXPEngine.GameObjects
 
 			// Create ray
 			ray = new Ray();
+		}
+		public LaserEmitter(Vector2 position, Vector2 direction) : this()
+		{
+			Position = position;
+			rotation = direction.Degrees;
 		}
 
 		public void Update()

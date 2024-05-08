@@ -43,12 +43,14 @@
   <ItemGroup>
     <Compile Include="Control\Scene.cs" />
     <Compile Include="Control\SceneManager.cs" />
-    <Compile Include="GameObjects\LaserEmitter.cs" />
+    <Compile Include="HitRecord.cs" />
+    <Compile Include="RayCore\IRayCollider.cs" />
+    <Compile Include="LaserEmitter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="GXPEngine\AddOns\Gizmos.cs" />
     <Compile Include="GXPEngine\AddOns\SpriteBatch.cs" />
     <Compile Include="GXPEngine\AddOns\TiledLoader.cs" />
-    <Compile Include="MathClasses\Circle.cs" />
+    <Compile Include="RayCore\Circle.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="GXPEngine\Core\Canvas.cs" />
     <Compile Include="GXPEngine\Game.cs" />
@@ -87,9 +89,12 @@
     <Compile Include="GXPEngine\FMOD\FMODSoundSystem.cs" />
     <Compile Include="GXPEngine\SoLoud\Soloud.cs" />
     <Compile Include="GXPEngine\SoLoud\SoloudSoundSystem.cs" />
-    <Compile Include="MathClasses\MathUtils.cs" />
-    <Compile Include="MathClasses\Ray.cs" />
-    <Compile Include="GameObjects\Catapult.cs" />
+    <Compile Include="MathUtils.cs" />
+    <Compile Include="RayCore\LineSegment.cs" />
+    <Compile Include="RayCore\Ray.cs" />
+    <Compile Include="Catapult.cs" />
+    <Compile Include="RayCore\RayColliderList.cs" />
+    <Compile Include="RayCore\RayPath.cs" />
     <Compile Include="Scenes\TestLevel.cs" />
   </ItemGroup>
   <ItemGroup>

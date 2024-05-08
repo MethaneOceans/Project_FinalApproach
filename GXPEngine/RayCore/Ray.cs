@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GXPEngine
+﻿namespace GXPEngine
 {
 	internal class Ray
 	{

@@ -1,7 +1,5 @@
 ﻿using GXPEngine.Control;
-using GXPEngine.GameObjects;
-using GXPEngine.MathClasses;
-using System;
+using GXPEngine.RayCore;
 using System.Collections.Generic;
 using System.Drawing;
 using static GXPEngine.Mathf;
@@ -16,25 +14,37 @@ namespace GXPEngine.Scenes
 		EasyDraw rayLayer;
 		Catapult catapult;
 
-		LaserEmitter emitter;
+		IRayCollider rayCollider;
 
-		Circle circle;
-
-		// NOTE: Temporary, this is hard to work with if a larger amount of rays is used.
-		List<(Ray ray, float t)> rays;
-		List<LaserEmitter> lasers;
+		List<Ray> rays;
+		List<LaserEmitter> emitters;
 		
 		public override void Initialize()
 		{
 			// Base is called because it removes the child objects so there will be no duplicates
 			base.Initialize();
 
-			lasers = new List<LaserEmitter>();
-
 			// Configure and add the layer to draw rays on
 			rayLayer = new EasyDraw(width, height);
-			rays = new List<(Ray, float)>();
+			rays = new List<Ray>();
 			AddChild(rayLayer);
+
+			emitters = new List<LaserEmitter>()
+			{
+				new LaserEmitter(new Vector2(100, height / 2), new Vector2(1, 0)),
+			};
+			//float spacing = 0.1f;
+			//int numLasers = 1000;
+			//for (int i = 0; i < numLasers; i++)
+			//{
+			//	float y = height / 2f - (i - numLasers / 2) * spacing;
+			//	emitters.Add(new LaserEmitter(new Vector2(100, y), new Vector2(1, 0)));
+			//}
+			foreach (LaserEmitter emitter in emitters)
+			{
+				AddChild(emitter);
+				rays.Add(emitter.ray);
+			}
 
 			// Configure and add catapult
 			catapult = new Catapult()
@@ -43,83 +53,58 @@ namespace GXPEngine.Scenes
 			};
 			AddChild(catapult);
 
-			emitter = new LaserEmitter()
+			Circle a = new Circle(50)
 			{
-				Position = new Vector2(50, height / 2),
+				Position = new Vector2(width / 2, height / 2 + 75),
 			};
-			lasers.Add(emitter);
-			AddChild(emitter);
-
-			rays.Add((emitter.ray, float.NaN));
-
-			//int laserCount = 50;
-			//float laserSpread = 600;
-			//for (int i = 0; i < laserCount; i++)
-			//{
-			//	float laserMin = (height - laserSpread) / 2f;
-			//	float laserY = laserMin + (laserSpread / laserCount) * i;
-			//	LaserEmitter emitter = new LaserEmitter()
-			//	{
-			//		Position = new Vector2(50, laserY),
-			//	};
-			//	lasers.Add(emitter);
-			//	rays.Add((emitter.ray, float.NaN));
-			//	AddChild(emitter);
-			//}
-
-			circle = new Circle(50)
+			Circle b = new Circle(50)
 			{
-				Position = new Vector2(width / 2, height / 2),
+				Position = new Vector2(width / 2, height / 2 - 75),
 			};
+			Circle c = new Circle(50)
+			{
+				Position = new Vector2(width / 2 + 125, height / 2),
+			};
+			RayColliderList list = new RayColliderList();
+			list.Colliders.Add(a);
+			list.Colliders.Add(b);
+			list.Colliders.Add(c);
+			rayCollider = list;
 		}
 
 		public void Update()
 		{
-			UpdateRayLayer();
-
-			// Move emitter
-			float angleOffset = Sin(Time.time / 1000f) * 20;
-			foreach (LaserEmitter emitter in lasers)
+			// TEST: Rotate the laser to test reflection
+			foreach (LaserEmitter laser in emitters)
 			{
-				emitter.rotation = angleOffset;
+				laser.rotation = Sin(Time.time / 10000f) * 4f;
 			}
 
-			// Update ray intersections
-			for (int i = 0; i < rays.Count; i++)
+			// Get ray paths
+			List<RayPath> paths = new List<RayPath>();
+			foreach (Ray ray in rays)
 			{
-				Ray ray = rays[i].ray;
-				float t = circle.Intersect(ray);
-				rays[i] = (ray, t);
+				paths.Add(new RayPath(ray, rayCollider));
+			}
+
+			rayLayer.ClearTransparent();
+			rayLayer.NoFill();
+			rayLayer.Stroke(Color.Red);
+			rayLayer.StrokeWeight(1);
+			foreach (RayPath path in paths)
+			{
+				List<Vector2> points = path.Points;
+				for (int i = 0; i < points.Count - 1; i++)
+				{
+					Vector2 a = points[i];
+					Vector2 b = points[i + 1];
+
+					rayLayer.Line(a.x, a.y, b.x, b.y);
+				}
 			}
 		}
 
 		// Clears the ray layer and draws all rays in the rays list.
 		// TODO: Replace ray with object that stores info for a raycast instead.
-		private void UpdateRayLayer()
-		{
-			rayLayer.ClearTransparent();
-			rayLayer.Stroke(Color.Red);
-			rayLayer.StrokeWeight(3);
-			DrawRays(rays);
-		}
-		private void DrawRays(ICollection<(Ray, float)> rays)
-		{
-			foreach ((Ray r, float t) in rays) DrawRay(r, t);
-		}
-		private void DrawRay(Ray ray, float t)
-		{
-			if (t == float.NaN || t == -1)
-			{
-				rayLayer.Line(ray.Origin.x, ray.Origin.y, ray.At(2000).x, ray.At(2000).y);
-			}
-			else if (t > 0)
-			{
-				rayLayer.Line(ray.Origin.x, ray.Origin.y, ray.At(t).x, ray.At(t).y);
-			}
-			else
-			{
-				Console.WriteLine("t = {0}", t);
-			}
-		}
 	}
 }
