@@ -21,7 +21,7 @@ namespace GXPEngine
 			set
 			{
 				R.Direction = value;
-				rotation = Vector2.Rad2Deg(Atan2(value.y, value.x));
+				Rotation = Vector2.Rad2Deg(Atan2(value.y, value.x));
 			}
 		}
 		private readonly Ray R;

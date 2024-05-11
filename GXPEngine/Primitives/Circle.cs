@@ -1,18 +1,9 @@
 ﻿using System.Drawing;
 
-namespace GXPEngine
+namespace GXPEngine.Primitives
 {
 	internal class Circle : EasyDraw
 	{
-		public Vector2 Position
-		{
-			get => new Vector2(x, y);
-			set
-			{
-				x = value.x;
-				y = value.y;
-			}
-		}
 		public float Radius
 		{
 			get => radius;
@@ -40,6 +31,5 @@ namespace GXPEngine
 			Fill(Color.Blue);
 			Ellipse((width - 1) / 2f, (height - 1) / 2f, radius * 2, radius * 2);
 		}
-		
 	}
 }

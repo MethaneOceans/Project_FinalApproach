@@ -16,12 +16,12 @@ namespace GXPEngine.Primitives
 				rigidCollider.Position = value;
 			}
 		}
-		public new float rotation
+		public new float Rotation
 		{
-			get => base.rotation;
+			get => base.Rotation;
 			set
 			{
-				base.rotation = value;
+				base.Rotation = value;
 				rigidCollider.Angle = value;
 			}
 		}

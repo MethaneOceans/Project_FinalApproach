@@ -198,7 +198,7 @@ namespace GXPEngine
 		/// <value>
 		/// The rotation.
 		/// </value>
-		public float rotation {
+		public float Rotation {
 			get { return _rotation; }
 			set {
 				_rotation = value;
@@ -222,7 +222,7 @@ namespace GXPEngine
 		/// Angle.
 		/// </param>
 		public void Turn (float angle) {
-			rotation = _rotation + angle;
+			Rotation = _rotation + angle;
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------

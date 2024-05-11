@@ -259,7 +259,7 @@ namespace TiledMapParser {
 			// Set transform data using this origin:
 			newSprite.x = obj.X;
 			newSprite.y = obj.Y;
-			newSprite.rotation = obj.Rotation;
+			newSprite.Rotation = obj.Rotation;
 			newSprite.scaleX=obj.Width / newSprite.width;
 			newSprite.scaleY=obj.Height / newSprite.height;
 
@@ -440,7 +440,7 @@ namespace TiledMapParser {
 					// Adapting to Tiled's weird and inconsistent conventions again:
 					Tile.y = r * map.TileHeight - (Tile.height - map.TileHeight);
 					ChangeOrigin(Tile, 0.5f, 0.5f);
-					Tile.rotation=TiledUtils.GetRotation(rawTileInfo);
+					Tile.Rotation=TiledUtils.GetRotation(rawTileInfo);
 					Tile.Mirror(TiledUtils.GetMirrorX(rawTileInfo), false);
 					ChangeOrigin(Tile, defaultOriginX, defaultOriginY, 0.5f, 0.5f);
 
