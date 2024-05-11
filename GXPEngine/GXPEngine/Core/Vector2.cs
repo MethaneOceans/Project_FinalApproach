@@ -232,6 +232,17 @@ public struct Vector2
     {
         return GetUnitVectorDeg(Random.Next(360));
     }
+
+    public Vector2 RotatedRad(float angle)
+    {
+        float xComp = Cos(angle) * x - Sin(angle) * y;
+        float yComp = Sin(angle) * x + Cos(angle) * y;
+        return new Vector2(xComp, yComp);
+    }
+    public Vector2 RotatedDeg(float angle)
+    {
+        return RotatedRad(Deg2Rad(angle));
+    }
     /// <summary>
     /// Rotates a vector around a given point
     /// </summary>

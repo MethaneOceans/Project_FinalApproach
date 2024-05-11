@@ -87,6 +87,9 @@
     <Compile Include="GXPEngine\SoLoud\Soloud.cs" />
     <Compile Include="GXPEngine\SoLoud\SoloudSoundSystem.cs" />
     <Compile Include="MathUtils.cs" />
+    <Compile Include="Physics\ICollider.cs" />
+    <Compile Include="Physics\OBCollider.cs" />
+    <Compile Include="Primitives\Box.cs" />
     <Compile Include="Ray.cs" />
     <Compile Include="RayDrawn.cs" />
     <Compile Include="Scenes\TestLevel.cs" />

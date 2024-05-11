@@ -1,53 +1,84 @@
 ﻿using GXPEngine.Control;
+using GXPEngine.Physics;
+using GXPEngine.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using static GXPEngine.Mathf;
 
 namespace GXPEngine.Scenes
 {
+	// NOTE: PHYSICS BRANCH - This is a test for oriented boxes
 	internal class TestLevel : Scene
 	{
-		// TODO: Add player object
-		Catapult catapult;
-		// TODO: 
+		// Debug properties
+		private bool showCorners = false;
+
+		private EasyDraw debugLayer;
+
+		private EDBox BoxA;
+		private EDBox BoxB;
+
 		public override void Initialize()
 		{
 			// Base is called because it removes the child objects so there will be no duplicates
 			base.Initialize();
-			catapult = new Catapult()
-			{
-				Position = new Vector2(100, game.height - 100),
-			};
-			AddChild(catapult);
-		}
 
-		public void Update()
-		{
+			debugLayer = new EasyDraw(width, height);
 			
-		}
-	}
+			BoxA = new EDBox(new Vector2(width / 2f, height / 2f), new Vector2(200, 200), 0);
+			BoxB = new EDBox(new Vector2(), new Vector2(200, 200), 0);
 
-	internal class Catapult : GameObject
-	{
-		private EasyDraw body;
-		private EasyDraw barrel;
+			BoxA.ED.Clear(Color.White);
+			BoxA.ED.SetColor(0, 0, 1);
+			BoxB.ED.Clear(Color.White);
+			BoxB.ED.SetColor(0, 0, 1);
 
-		public Catapult()
-		{
-			body = new EasyDraw(75, 75);
-			body.SetOrigin(body.width / 2, body.height / 2);
-			body.Clear(Color.Gray);
-			AddChild(body);
-
-			barrel = new EasyDraw(75, 40);
-			barrel.SetOrigin(barrel.height / 2, barrel.height / 2);
-			barrel.Clear(Color.DarkGray);
-			AddChild(barrel);
+			AddChild(BoxA);
+			AddChild(BoxB);
+			AddChild(debugLayer);
 		}
 
 		public void Update()
 		{
-			barrel.rotation = Vector2.Rad2Deg(Atan2(Input.mouseY - y, Input.mouseX - x));
+			BoxB.Position = new Vector2(Input.mouseX, Input.mouseY);
+			
+			if (BoxA.rigidCollider.Overlapping(BoxB.rigidCollider))
+			{
+				BoxA.ED.SetColor(1, 0, 0);
+				BoxB.ED.SetColor(1, 0, 0);
+			}
+			else
+			{
+				BoxA.ED.SetColor(0, 0, 1);
+				BoxB.ED.SetColor(0, 0, 1);
+			}
+
+			if (Input.GetKey(Key.E)) BoxB.rotation += 1;
+			if (Input.GetKey(Key.Q)) BoxB.rotation -= 1;
+
+			UpdateDebug();
+		}
+
+		private void UpdateDebug()
+		{
+			debugLayer.ClearTransparent();
+
+			if (showCorners)
+			{
+				List<EDBox> boxes = new List<EDBox>() { BoxA, BoxB };
+				foreach (EDBox box in boxes)
+				{
+					debugLayer.Fill(Color.Green);
+					debugLayer.NoStroke();
+					Vector2 position = box.rigidCollider.Position;
+					for (int i = 1; i < 5; i++)
+					{
+						Vector2 corner = position + box.rigidCollider.GetCornerOffset(i);
+						debugLayer.Ellipse(corner.x, corner.y, 10, 10);
+					}
+				}
+			}
 		}
 	}
 }
