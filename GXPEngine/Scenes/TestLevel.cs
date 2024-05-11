@@ -1,10 +1,7 @@
 ﻿using GXPEngine.Control;
-using GXPEngine.Physics;
 using GXPEngine.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using static GXPEngine.Mathf;
 
 namespace GXPEngine.Scenes
 {
@@ -12,7 +9,7 @@ namespace GXPEngine.Scenes
 	internal class TestLevel : Scene
 	{
 		// Debug properties
-		private bool showCorners = false;
+		private bool showCorners = true;
 
 		private EasyDraw debugLayer;
 
@@ -41,6 +38,9 @@ namespace GXPEngine.Scenes
 
 		public void Update()
 		{
+			HandleInput();
+
+			BoxA.Rotation -= 1;
 			BoxB.Position = new Vector2(Input.mouseX, Input.mouseY);
 			
 			if (BoxA.rigidCollider.Overlapping(BoxB.rigidCollider))
@@ -54,12 +54,17 @@ namespace GXPEngine.Scenes
 				BoxB.ED.SetColor(0, 0, 1);
 			}
 
-			if (Input.GetKey(Key.E)) BoxB.rotation += 1;
-			if (Input.GetKey(Key.Q)) BoxB.rotation -= 1;
-
 			UpdateDebug();
 		}
 
+		private void HandleInput()
+		{
+			if (Input.GetKey(Key.E)) BoxB.Rotation += 1;
+			if (Input.GetKey(Key.Q)) BoxB.Rotation -= 1;
+			if (Input.GetKeyDown(Key.F1)) showCorners = !showCorners;
+		}
+
+		// Updates the debug easydraw object
 		private void UpdateDebug()
 		{
 			debugLayer.ClearTransparent();

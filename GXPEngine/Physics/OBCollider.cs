@@ -6,22 +6,15 @@ namespace GXPEngine.Physics
 	/// <summary>
 	/// Oriented Box collider. Specifically not called OBB because it doesn't have bounding box functionality as of yet (if ever).
 	/// </summary>
-	internal class OBCollider : ICollider<OBCollider>
+	internal class OBCollider : ICollider
 	{
 		public Vector2 Position;
 		public Vector2 Size;
 		public float Angle;
 
-		public Vector2 normalP
-		{
-			get => Vector2.GetUnitVectorDeg(Angle);
-		}
-		public Vector2 normalQ
-		{
-			get => Vector2.GetUnitVectorDeg(Angle + 90);
-		}
+		public Vector2 NormalP => Vector2.GetUnitVectorDeg(Angle);
+		public Vector2 NormalQ => Vector2.GetUnitVectorDeg(Angle + 90);
 
-		// TODO: Add angle
 		public OBCollider(Vector2 position, Vector2 size, float angle)
 		{
 			Position = position;
@@ -29,12 +22,18 @@ namespace GXPEngine.Physics
 			Angle = angle;
 		}
 
+		public bool Overlapping(ICollider other)
+		{
+			if (other is OBCollider) return Overlapping(other as OBCollider);
+			else return false;
+		}
+
 		public bool Overlapping(OBCollider other)
 		{
-			bool thisOverlapP = OverlappingOnAxis(normalP, other);
-			bool thisOverlapQ = OverlappingOnAxis(normalQ, other);
-			bool otherOverlapP = other.OverlappingOnAxis(other.normalP, this);
-			bool otherOverlapQ = other.OverlappingOnAxis(other.normalQ, this);
+			bool thisOverlapP = OverlappingOnAxis(NormalP, other);
+			bool thisOverlapQ = OverlappingOnAxis(NormalQ, other);
+			bool otherOverlapP = other.OverlappingOnAxis(other.NormalP, this);
+			bool otherOverlapQ = other.OverlappingOnAxis(other.NormalQ, this);
 
 			return thisOverlapP && thisOverlapQ && otherOverlapP && otherOverlapQ;
 		}
@@ -44,17 +43,17 @@ namespace GXPEngine.Physics
 			OBCollider BoxA = this;
 			OBCollider BoxB = other;
 
-			var LimitsA = BoxA.MinMaxCorner(axis);
-			var LimitsB = BoxB.MinMaxCorner(axis);
+			(Vector2 vecMinA, Vector2 vecMaxA) = BoxA.MinMaxCorner(axis);
+			(Vector2 vecMinB, Vector2 vecMaxB) = BoxB.MinMaxCorner(axis);
 
 			Vector2 unitAxis = axis.Normalized();
-			float minA = Vector2.Dot(unitAxis, LimitsA.min + BoxA.Position);
-			float maxA = Vector2.Dot(unitAxis, LimitsA.max + BoxA.Position);
-			float minB = Vector2.Dot(unitAxis, LimitsB.min + BoxB.Position);
-			float maxB = Vector2.Dot(unitAxis, LimitsB.max + BoxB.Position);
+			float projectedMinA = Vector2.Dot(unitAxis, vecMinA + BoxA.Position);
+			float projectedMaxA = Vector2.Dot(unitAxis, vecMaxA + BoxA.Position);
+			float projectedMinB = Vector2.Dot(unitAxis, vecMinB + BoxB.Position);
+			float projectedMaxB = Vector2.Dot(unitAxis, vecMaxB + BoxB.Position);
 
-			if (minA < maxB && maxA > minB) return true;
-			if (minB < maxA && maxB > minA) return true;
+			if (projectedMinA < projectedMaxB && projectedMaxA > projectedMinB) return true;
+			if (projectedMinB < projectedMaxA && projectedMaxB > projectedMinA) return true;
 			return false;
 		}
 
@@ -86,6 +85,7 @@ namespace GXPEngine.Physics
 			return (min, max);
 		}
 
+		// Get a corner (or center) of the box
 		public Vector2 GetCornerOffset(int i)
 		{
 			Vector2 corner;

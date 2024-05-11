@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace GXPEngine.Physics
 {
-	internal interface ICollider<T>
+	internal interface ICollider
 	{
-		bool Overlapping(T other);
+		bool Overlapping(ICollider other);
 	}
 }
