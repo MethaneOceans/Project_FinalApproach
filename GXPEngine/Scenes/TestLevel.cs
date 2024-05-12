@@ -10,7 +10,9 @@ namespace GXPEngine.Scenes
 	internal class TestLevel : Scene
 	{
 		// Debug properties
-		private bool showCorners = true;
+		private bool showCorners = false;
+		private bool showColInfo = false;
+		private bool enableResolve = false;
 
 		private EasyDraw debugLayer;
 
@@ -58,7 +60,7 @@ namespace GXPEngine.Scenes
 		{
 			HandleInput();
 
-			BoxA.Rotation -= 1;
+			//BoxA.Rotation -= 1;
 			BoxB.Position = new Vector2(Input.mouseX, Input.mouseY);
 
 			BoxC.Rotation = BoxB.Rotation;
@@ -66,11 +68,11 @@ namespace GXPEngine.Scenes
 			
 			if (BoxC.rigidCollider.Overlapping(BoxA.rigidCollider))
 			{
-				var colInfo = BoxC.rigidCollider.LastCollision;
-				Console.WriteLine(colInfo.PenetrationDepth);
-				Console.WriteLine(colInfo.Normal);
+				//var colInfo = BoxC.rigidCollider.LastCollision;
+				//Console.WriteLine(colInfo.PenetrationDepth);
+				//Console.WriteLine(colInfo.Normal);
 
-				BoxC.Position -= colInfo.Normal * colInfo.PenetrationDepth;
+				//BoxC.Position -= colInfo.Normal * colInfo.PenetrationDepth;
 				BoxA.ED.SetColor(1, 0, 0);
 				BoxC.ED.SetColor(1, 0, 0);
 			}
@@ -88,6 +90,9 @@ namespace GXPEngine.Scenes
 			if (Input.GetKey(Key.E)) BoxB.Rotation += 1;
 			if (Input.GetKey(Key.Q)) BoxB.Rotation -= 1;
 			if (Input.GetKeyDown(Key.F1)) showCorners = !showCorners;
+			if (Input.GetKeyDown(Key.F2)) showColInfo = !showColInfo;
+			if (Input.GetKeyDown(Key.F3)) enableResolve = !enableResolve;
+
 		}
 
 		// Updates the debug easydraw object
@@ -95,37 +100,71 @@ namespace GXPEngine.Scenes
 		{
 			debugLayer.ClearTransparent();
 
-			if (showCorners)
-			{
-				List<EDBox> boxes = new List<EDBox>() { BoxA, BoxB, BoxC };
-				foreach (EDBox box in boxes)
-				{
-					debugLayer.Fill(Color.Green);
-					debugLayer.NoStroke();
-					Vector2 position = box.rigidCollider.Position;
-					for (int i = 1; i < 5; i++)
-					{
-						Vector2 corner = position + box.rigidCollider.GetCornerOffset(i);
-						debugLayer.Ellipse(corner.x, corner.y, 10, 10);
-					}
-				}
-			}
-
-			if (true)
+			if (showColInfo)
 			{
 				var colInfo = BoxC.rigidCollider.LastCollision;
 
 				Vector2 a = BoxC.Position;
-				Vector2 b = BoxC.Position + colInfo.Normal * 100;
+				Vector2 b = BoxC.Position + colInfo.Normal * colInfo.PenetrationDepth;
 
 				debugLayer.StrokeWeight(2);
 				debugLayer.Stroke(Color.Green);
 				debugLayer.Line(a.x, a.y, b.x, b.y);
-				a = BoxA.Position;
-				b = BoxA.Position + 100 * Vector2.GetUnitVectorDeg(BoxA.Rotation);
-				debugLayer.Line(a.x, a.y, b.x, b.y);
-
+				//a = BoxA.Position;
+				//b = BoxA.Position + 100 * Vector2.GetUnitVectorDeg(BoxA.Rotation);
+				//debugLayer.Line(a.x, a.y, b.x, b.y);
 			}
+			if (enableResolve)
+			{
+				var colInfo = BoxC.rigidCollider.LastCollision;
+				BoxC.Position += colInfo.Normal * colInfo.PenetrationDepth;
+			}
+
+			if (showCorners)
+			{
+				List<EDBox> boxes = new List<EDBox>() { BoxA, BoxB, BoxC };
+
+				debugLayer.NoStroke();
+				debugLayer.Fill(Color.Green);
+				
+				foreach (EDBox box in boxes)
+				{
+					box.rigidCollider.DrawCorners(debugLayer);
+				}
+			}
+
+			bool showEdgeNormals = true;
+			if (showEdgeNormals)
+			{
+				List<EDBox> boxes = new List<EDBox>() { BoxA, BoxB, BoxC };
+
+				debugLayer.StrokeWeight(2);
+
+				foreach (EDBox box in boxes)
+				{
+					debugLayer.Stroke(Color.Purple);
+					box.rigidCollider.DrawNormals(debugLayer);
+				}
+			}
+
+			bool showOverlapAxis = true;
+			if (showOverlapAxis)
+			{
+				debugLayer.StrokeWeight(10);
+
+				debugLayer.Stroke(Color.Purple);
+				BoxA.rigidCollider.DrawOverlapOnAxis(debugLayer, new Vector2(1, 0));
+				BoxA.rigidCollider.DrawOverlapOnAxis(debugLayer, new Vector2(0, 1));
+			
+				debugLayer.Stroke(Color.Blue);
+				BoxC.rigidCollider.DrawOverlapOnAxis(debugLayer, new Vector2(1, 0));
+				BoxC.rigidCollider.DrawOverlapOnAxis(debugLayer, new Vector2(0, 1));
+			}
+
+
+
+			
+
 		}
 	}
 }

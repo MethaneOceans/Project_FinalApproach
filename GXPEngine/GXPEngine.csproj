@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Physics\CircleCollider.cs" />
+    <Compile Include="Physics\CollisionInfo.cs" />
     <Compile Include="Primitives\Circle.cs" />
     <Compile Include="Control\Scene.cs" />
     <Compile Include="Control\SceneManager.cs" />
