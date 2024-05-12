@@ -1,9 +1,12 @@
-﻿using System.Drawing;
+﻿using GXPEngine.Physics;
+using System.Drawing;
 
 namespace GXPEngine.Primitives
 {
 	internal class Circle : EasyDraw
 	{
+		public CircleCollider rigidCollider;
+
 		public float Radius
 		{
 			get => radius;

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using GXPEngine.Core;
+using System;
 using System.Collections.Generic;
+using System.Dynamic;
 
 namespace GXPEngine.Physics
 {
@@ -12,6 +14,8 @@ namespace GXPEngine.Physics
 		public Vector2 Size;
 		public float Angle;
 
+		public CollisionInfo LastCollision;
+
 		public Vector2 NormalP => Vector2.GetUnitVectorDeg(Angle);
 		public Vector2 NormalQ => Vector2.GetUnitVectorDeg(Angle + 90);
 
@@ -20,6 +24,8 @@ namespace GXPEngine.Physics
 			Position = position;
 			Size = size;
 			Angle = angle;
+
+			LastCollision = new CollisionInfo();
 		}
 
 		public bool Overlapping(ICollider other)
@@ -30,31 +36,75 @@ namespace GXPEngine.Physics
 
 		public bool Overlapping(OBCollider other)
 		{
-			bool thisOverlapP = OverlappingOnAxis(NormalP, other);
-			bool thisOverlapQ = OverlappingOnAxis(NormalQ, other);
-			bool otherOverlapP = other.OverlappingOnAxis(other.NormalP, this);
-			bool otherOverlapQ = other.OverlappingOnAxis(other.NormalQ, this);
+			bool thisOverlapP = OverlappingOnAxis(NormalP, other, out CollisionInfo bestCol);
+			if (!thisOverlapP) return false;
+
+			bool thisOverlapQ = OverlappingOnAxis(NormalQ, other, out CollisionInfo currentCol);
+			if (!thisOverlapQ) return false;
+			if (currentCol.PenetrationDepth >= bestCol.PenetrationDepth) bestCol = currentCol;
+
+			bool otherOverlapP = other.OverlappingOnAxis(other.NormalP, this, out currentCol);
+			if (!otherOverlapP) return false;
+			if (currentCol.PenetrationDepth >= bestCol.PenetrationDepth) bestCol = currentCol;
+
+			bool otherOverlapQ = other.OverlappingOnAxis(other.NormalQ, this, out currentCol);
+			if (!otherOverlapQ) return false;
+			if (currentCol.PenetrationDepth >= bestCol.PenetrationDepth) bestCol = currentCol;
+
+			LastCollision = bestCol;
+			Console.WriteLine(LastCollision.PenetrationDepth);
 
 			return thisOverlapP && thisOverlapQ && otherOverlapP && otherOverlapQ;
 		}
 
-		public bool OverlappingOnAxis(Vector2 axis, OBCollider other)
+		public bool OverlappingOnAxis(Vector2 axis, OBCollider other, out CollisionInfo colInfo)
 		{
 			OBCollider BoxA = this;
 			OBCollider BoxB = other;
+			colInfo = new CollisionInfo();
 
+			// Get min and max vertices along a given axis
 			(Vector2 vecMinA, Vector2 vecMaxA) = BoxA.MinMaxCorner(axis);
 			(Vector2 vecMinB, Vector2 vecMaxB) = BoxB.MinMaxCorner(axis);
 
+			// Normalize the axis because longer vectors would make the next operations inaccurate
 			Vector2 unitAxis = axis.Normalized();
+
+			// Get the projected values of minmax on the unitAxis
 			float projectedMinA = Vector2.Dot(unitAxis, vecMinA + BoxA.Position);
 			float projectedMaxA = Vector2.Dot(unitAxis, vecMaxA + BoxA.Position);
 			float projectedMinB = Vector2.Dot(unitAxis, vecMinB + BoxB.Position);
 			float projectedMaxB = Vector2.Dot(unitAxis, vecMaxB + BoxB.Position);
 
-			if (projectedMinA < projectedMaxB && projectedMaxA > projectedMinB) return true;
-			if (projectedMinB < projectedMaxA && projectedMaxB > projectedMinA) return true;
+			// A first then B
+			if (projectedMinA <= projectedMinB && projectedMaxA >= projectedMinB)
+			{
+				colInfo.Normal = unitAxis;
+				colInfo.PenetrationDepth = projectedMinB - projectedMaxA;
+
+				return true;
+			}
+			if (projectedMinB <= projectedMinA && projectedMaxB >= projectedMinA)
+			{
+				colInfo.Normal = -unitAxis;
+				colInfo.PenetrationDepth = projectedMinB - projectedMaxA;
+
+				return true;
+			}
 			return false;
+		}
+
+		public class CollisionInfo
+		{
+			public Vector2 Normal;
+			public float PenetrationDepth;
+
+			public CollisionInfo(Vector2 normal, float penetrationDepth)
+			{
+				Normal = normal;
+				PenetrationDepth = penetrationDepth;
+			}
+			public CollisionInfo() : this(new Vector2(), -1000) { }
 		}
 
 		public (Vector2 min, Vector2 max) MinMaxCorner(Vector2 axis)
