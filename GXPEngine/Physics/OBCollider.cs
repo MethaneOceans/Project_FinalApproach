@@ -9,8 +9,9 @@ namespace GXPEngine.Physics
 	internal partial class OBCollider : ICollider
 	{
 		public Vector2 Velocity;
-
-		private bool valueChanged = true;
+		public CollisionInfo LastCollision;
+		// Size field can't change, this to prevent unpredictable behavior.
+		public readonly Vector2 Size;
 
 		// ===================================
 		// Position property
@@ -25,7 +26,6 @@ namespace GXPEngine.Physics
 			}
 		}
 		private Vector2 _position;
-
 		// ===================================
 		// Angle property
 		// ===================================
@@ -40,17 +40,8 @@ namespace GXPEngine.Physics
 		}
 		private float _angle;
 
-
-		public CollisionInfo LastCollision;
-
-		// Size property can't change, this to prevent unpredictable behavior.
-		public readonly Vector2 Size;
-		// These are the relative corners and normals to the center. This won't change.
-		public readonly Vector2[] baseCorners;
-		public readonly Vector2[] baseNormals;
-
 		// ===================================
-		// Corner property
+		// Corners property
 		// ===================================
 		public Vector2[] Corners
 		{
@@ -58,17 +49,17 @@ namespace GXPEngine.Physics
 			{
 				if (!_cornersValid)
 				{
-					_corners = rotateVectors(baseCorners, Angle);
+					_corners = Vector2.RotateVectorsDeg(baseCorners, Angle);
 					_cornersValid = true;
 				}
 				return _corners;
 			}
 		}
+		private readonly Vector2[] baseCorners;
 		private Vector2[] _corners;
 		bool _cornersValid = false;
-
 		// ===================================
-		// Normal property
+		// Normals property
 		// ===================================
 		public Vector2[] Normals
 		{
@@ -76,12 +67,13 @@ namespace GXPEngine.Physics
 			{
 				if (!_normalsValid)
 				{
-					_normals = rotateVectors(baseNormals, Angle);
+					_normals = Vector2.RotateVectorsDeg(baseNormals, Angle);
 					_normalsValid = true;
 				}
 				return _normals;
 			}
 		}
+		private readonly Vector2[] baseNormals;
 		private Vector2[] _normals;
 		private bool _normalsValid = false;
 
@@ -118,41 +110,38 @@ namespace GXPEngine.Physics
 			else return false;
 		}
 
+		// Overlap test specifically for other boxes
 		private bool Overlapping(OBCollider other)
 		{
 			CollisionInfo bestCol = null;
-
 			int currentCheck = 0;
 
-			foreach (Vector2 norm in Normals)
+			// Axis checks for this box
+			for (int i = 0; i < Normals.Length; i++)
 			{
 				currentCheck++;
+				Vector2 norm = Normals[i];
 
 				bool overlaps = OverlappingOnAxis(norm, other, out CollisionInfo col);
 				if (bestCol == null || col.PenetrationDepth < bestCol.PenetrationDepth) bestCol = col;
-				if (!overlaps)
-				{
-					Console.WriteLine("Broke out of intersection check at check #{0}", currentCheck);
-					return false;
-				}
+				if (!overlaps) return false;
 			}
-			foreach (Vector2 norm in other.Normals)
+			// Axis checks for the other box
+			for (int i = 0; i < other.Normals.Length; i++)
 			{
 				currentCheck++;
+				Vector2 norm = other.Normals[i];
 
 				bool overlaps = other.OverlappingOnAxis(norm, this, out CollisionInfo col);
 				if (bestCol == null || col.PenetrationDepth < bestCol.PenetrationDepth) bestCol = col;
-				if (!overlaps)
-				{
-					Console.WriteLine("Broke out of intersection check at check #{0}", currentCheck);
-					return false;
-				}
+				if (!overlaps) return false;
 			}
 
 			LastCollision = bestCol;
 			return true;
 		}
 
+		// Checks if the box overlaps with other box along a given axis
 		public bool OverlappingOnAxis(Vector2 axis, OBCollider other, out CollisionInfo colInfo)
 		{
 			float pDepth;
@@ -193,7 +182,11 @@ namespace GXPEngine.Physics
 			return collides;
 		}
 
-		// Axis should be normalized
+		/// <summary>
+		/// Gets the minimum and maximum points along a given axis
+		/// </summary>
+		/// <param name="axis">Axis to compare the points on</param>
+		/// <returns>A tuple containing the min and max vectors and projected values</returns>
 		public (Vector2 vMin, float pMin, Vector2 vMax, float pMax) MinMaxCorner(Vector2 axis)
 		{
 			Vector2 vMin = new Vector2();
@@ -221,27 +214,18 @@ namespace GXPEngine.Physics
 			return (vMin, pMin, vMax, pMax);
 		}
 
-		private Vector2[] rotateVectors(Vector2[] vecs, float angle)
+		// =====================================================
+		// Property management methods
+		// =====================================================
+		private void Invalidate()
 		{
-			// Snippet from rotation method
-			// float xComp = Cos(angle) * x - Sin(angle) * y;
-			// float yComp = Sin(angle) * x + Cos(angle) * y;
-			angle = Vector2.Deg2Rad(angle);
-			float cosA = Cos(angle);
-			float sinA = Sin(angle);
-
-			Vector2[] result = new Vector2[vecs.Length];
-			for (int i = 0; i < vecs.Length; i++)
-			{
-				float x = vecs[i].x;
-				float y = vecs[i].y;
-
-				result[i] = new Vector2(cosA * x - sinA * y, sinA * x + cosA * y);
-			}
-
-			return result;
+			_cornersValid = false;
+			_normalsValid = false;
 		}
 
+		// =====================================================
+		// Debugging methods
+		// =====================================================
 		public void DrawNormals(EasyDraw ed)
 		{
 			for (int i = 0;i < baseNormals.Length; i++)
@@ -269,12 +253,6 @@ namespace GXPEngine.Physics
 			Vector2 a = axis * minmax.pMin;
 			Vector2 b = axis * minmax.pMax;
 			ed.Line(a.x, a.y, b.x, b.y);
-		}
-
-		private void Invalidate()
-		{
-			_cornersValid = false;
-			_normalsValid = false;
 		}
 	}
 }

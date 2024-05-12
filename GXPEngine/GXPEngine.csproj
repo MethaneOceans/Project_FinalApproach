@@ -92,9 +92,10 @@
     <Compile Include="Physics\ICollider.cs" />
     <Compile Include="Physics\OBCollider.cs" />
     <Compile Include="Primitives\Box.cs" />
+    <Compile Include="Primitives\EDBox.cs" />
     <Compile Include="Ray.cs" />
     <Compile Include="RayDrawn.cs" />
-    <Compile Include="Scenes\TestLevel.cs" />
+    <Compile Include="Scenes\CollisionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
