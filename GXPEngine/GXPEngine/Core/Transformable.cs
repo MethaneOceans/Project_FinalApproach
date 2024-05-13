@@ -198,6 +198,11 @@ namespace GXPEngine
 		/// <value>
 		/// The rotation.
 		/// </value>
+		public float rotation
+		{
+			get => Rotation;
+			set => Rotation = value;
+		}
 		public float Rotation {
 			get { return _rotation; }
 			set {

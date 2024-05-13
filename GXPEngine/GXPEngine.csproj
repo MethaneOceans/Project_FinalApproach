@@ -41,8 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MathUtils.cs" />
+    <Compile Include="Mirror.cs" />
     <Compile Include="Physics\CircleCollider.cs" />
     <Compile Include="Physics\CollisionInfo.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Primitives\Circle.cs" />
     <Compile Include="Control\Scene.cs" />
     <Compile Include="Control\SceneManager.cs" />
@@ -88,16 +91,16 @@
     <Compile Include="GXPEngine\FMOD\FMODSoundSystem.cs" />
     <Compile Include="GXPEngine\SoLoud\Soloud.cs" />
     <Compile Include="GXPEngine\SoLoud\SoloudSoundSystem.cs" />
-    <Compile Include="MathUtils.cs" />
     <Compile Include="Physics\ACollider.cs" />
     <Compile Include="Physics\OBCollider.cs" />
     <Compile Include="Primitives\Box.cs" />
     <Compile Include="Primitives\EDBox.cs" />
     <Compile Include="Primitives\EDCircle.cs" />
-    <Compile Include="Ray.cs" />
-    <Compile Include="RayDrawn.cs" />
+    <Compile Include="Physics\Ray.cs" />
+    <Compile Include="Prism.cs" />
     <Compile Include="Scenes\CircleTest.cs" />
     <Compile Include="Scenes\CollisionTest.cs" />
+    <Compile Include="Scenes\PrismTest.cs" />
     <Compile Include="Scenes\RayTest.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,8 +9,8 @@ using GXPEngine.Scenes;                           // System.Drawing contains dra
 /// The only available scenes are test scenes
 /// </summary>
 public class MyGame : Game {
-	private SceneManager sceneManager;
-	private EasyDraw fpsCounter;
+	private readonly SceneManager sceneManager;
+	private readonly EasyDraw fpsCounter;
 
 	public MyGame() : base(1600, 900, pFullScreen: false, pPixelArt: true)
 	{
@@ -18,6 +18,7 @@ public class MyGame : Game {
 		sceneManager.AddScene("CollisionTest", new CollisionTest());
 		sceneManager.AddScene("RayTest", new RayTest());
 		sceneManager.AddScene("CircleTest", new CircleTest());
+		sceneManager.AddScene("PrismTest", new PrismTest());
 
 		// Show the fps
 		fpsCounter = new EasyDraw(200, 50);
@@ -46,10 +47,7 @@ public class MyGame : Game {
 		if (Input.GetKeyDown(Key.ONE)) sceneManager.SwitchScene("CollisionTest");
 		if (Input.GetKeyDown(Key.TWO)) sceneManager.SwitchScene("RayTest");
 		if (Input.GetKeyDown(Key.THREE)) sceneManager.SwitchScene("CircleTest");
-		if (Input.GetKeyDown(Key.FOUR))
-		{
-			
-		}	// Moving circles
+		if (Input.GetKeyDown(Key.FOUR)) sceneManager.SwitchScene("PrismTest");
 		if (Input.GetKeyDown(Key.FIVE))
 		{
 			
