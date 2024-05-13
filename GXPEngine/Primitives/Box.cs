@@ -4,7 +4,7 @@ namespace GXPEngine.Primitives
 {
 	internal class Box : GameObject
 	{
-		public OBCollider rigidCollider;
+		public OBCollider body;
 
 		public new Vector2 Position
 		{
@@ -12,7 +12,7 @@ namespace GXPEngine.Primitives
 			set
 			{
 				base.Position = value;
-				rigidCollider.Position = value;
+				body.Position = value;
 			}
 		}
 		public new float Rotation
@@ -21,13 +21,13 @@ namespace GXPEngine.Primitives
 			set
 			{
 				base.Rotation = value;
-				rigidCollider.Angle = value;
+				body.Angle = value;
 			}
 		}
 
 		public Box(Vector2 position, Vector2 size, float angle)
 		{
-			rigidCollider = new OBCollider(position, size, angle);
+			body = new OBCollider(position, size, angle);
 
 			Position = position;
 		}

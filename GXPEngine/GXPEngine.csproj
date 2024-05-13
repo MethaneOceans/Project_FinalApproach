@@ -93,8 +93,10 @@
     <Compile Include="Physics\OBCollider.cs" />
     <Compile Include="Primitives\Box.cs" />
     <Compile Include="Primitives\EDBox.cs" />
+    <Compile Include="Primitives\EDCircle.cs" />
     <Compile Include="Ray.cs" />
     <Compile Include="RayDrawn.cs" />
+    <Compile Include="Scenes\CircleTest.cs" />
     <Compile Include="Scenes\CollisionTest.cs" />
     <Compile Include="Scenes\RayTest.cs" />
   </ItemGroup>

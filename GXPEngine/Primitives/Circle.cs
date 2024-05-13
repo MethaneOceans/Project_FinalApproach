@@ -3,36 +3,34 @@ using System.Drawing;
 
 namespace GXPEngine.Primitives
 {
-	internal class Circle : EasyDraw
+	internal class Circle : GameObject
 	{
-		public CircleCollider rigidCollider;
+		public CircleCollider body;
 
-		public float Radius
+		public new Vector2 Position
 		{
-			get => radius;
+			get => base.Position;
 			set
 			{
-				radius = value;
-				Redraw();
+				base.Position = value;
+				body.Position = value;
 			}
 		}
-		private float radius;
-
-		public Circle(float radius) : base((int)(radius * 2), (int)(radius * 2))
+		public new float Rotation
 		{
-			this.radius = radius;
-			SetOrigin(radius, radius);
-			Redraw();
+			get => base.Rotation;
+			set
+			{
+				base.Rotation = value;
+				body.Angle = value;
+			}
 		}
-		public Circle(Vector2 position, float radius) : this(radius)
+
+		public Circle(Vector2 position, float radius)
 		{
+			body = new CircleCollider(position, radius);
+
 			Position = position;
-		}
-
-		private void Redraw()
-		{
-			Fill(Color.Blue);
-			Ellipse((width - 1) / 2f, (height - 1) / 2f, radius * 2, radius * 2);
 		}
 	}
 }

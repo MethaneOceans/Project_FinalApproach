@@ -46,7 +46,7 @@ namespace GXPEngine.Scenes
 			ray.Direction = (mouse - ray.Origin).Normalized();
 
 			//BoxA.Rotation -= 1;
-			float t = BoxA.rigidCollider.RayCast(ray);
+			float t = BoxA.body.RayCast(ray);
 			if (t > 0)
 			{
 				BoxA.ED.SetColor(1, 0, 0);
@@ -58,7 +58,7 @@ namespace GXPEngine.Scenes
 				debugLayer.Ellipse(p.x, p.y, 10, 10);
 
 				// Draw normal
-				Vector2 n = BoxA.rigidCollider.NormalAt(p);
+				Vector2 n = BoxA.body.NormalAt(p);
 				Vector2 a = p;
 				Vector2 b = p + 100 * n;
 				debugLayer.Stroke(Color.Green);
@@ -113,13 +113,13 @@ namespace GXPEngine.Scenes
 				debugLayer.Fill(Color.Green);
 				foreach (EDBox box in boxes)
 				{
-					box.rigidCollider.DrawCorners(debugLayer);
+					box.body.DrawCorners(debugLayer);
 				}
 
 				debugLayer.Stroke(Color.Purple);
 				foreach (EDBox box in boxes)
 				{
-					box.rigidCollider.DrawNormals(debugLayer);
+					box.body.DrawNormals(debugLayer);
 				}
 			}
 		}

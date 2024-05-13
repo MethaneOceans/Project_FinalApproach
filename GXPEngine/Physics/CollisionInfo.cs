@@ -3,12 +3,12 @@
 	public class CollisionInfo
 	{
 		public Vector2 Normal;
-		public float PenetrationDepth;
+		public float Depth;
 
-		public CollisionInfo(Vector2 normal, float penetrationDepth)
+		public CollisionInfo(Vector2 normal, float depth)
 		{
 			Normal = normal;
-			PenetrationDepth = penetrationDepth;
+			Depth = depth;
 		}
 		public CollisionInfo() : this(new Vector2(), -1000) { }
 	}

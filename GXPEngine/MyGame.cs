@@ -17,6 +17,7 @@ public class MyGame : Game {
 		sceneManager = new SceneManager(this);
 		sceneManager.AddScene("CollisionTest", new CollisionTest());
 		sceneManager.AddScene("RayTest", new RayTest());
+		sceneManager.AddScene("CircleTest", new CircleTest());
 
 		// Show the fps
 		fpsCounter = new EasyDraw(200, 50);
@@ -44,10 +45,7 @@ public class MyGame : Game {
 
 		if (Input.GetKeyDown(Key.ONE)) sceneManager.SwitchScene("CollisionTest");
 		if (Input.GetKeyDown(Key.TWO)) sceneManager.SwitchScene("RayTest");
-		if (Input.GetKeyDown(Key.THREE))
-		{
-			
-		}   // LineCollision
+		if (Input.GetKeyDown(Key.THREE)) sceneManager.SwitchScene("CircleTest");
 		if (Input.GetKeyDown(Key.FOUR))
 		{
 			

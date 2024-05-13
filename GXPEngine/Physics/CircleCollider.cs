@@ -11,6 +11,7 @@ namespace GXPEngine.Physics
 		{
 			Position = center;
 			Radius = radius;
+			LastCollision = new CollisionInfo();
 		}
 
 		public override (float min, float max) MinMaxBounds(Vector2 axis)
@@ -26,31 +27,42 @@ namespace GXPEngine.Physics
 
 		public override bool Overlapping(ACollider other)
 		{
-			throw new NotImplementedException();
+			if (other is CircleCollider) return Overlapping(other as CircleCollider);
+			else if (other is OBCollider) return Overlapping(other as OBCollider);
+			else return false;
 		}
 		private bool Overlapping(OBCollider other)
 		{
-			Ray r = new Ray(Position, other.Position);
-			Vector2 closestPoint = r.At(other.RayCast(r));
+			CollisionInfo bestCol = null;
 
-			float distanceSquared = (Position - closestPoint).LengthSquared();
-			if (distanceSquared <= Radius * Radius)
+			for (int i = 0; i < other.Normals.Length; i++)
 			{
-				CollisionInfo col = new CollisionInfo();
-				col.Normal = NormalAt(closestPoint);
-				col.PenetrationDepth = Radius - Sqrt(distanceSquared);
-				return true;
+				Vector2 norm = other.Normals[i];
+
+				bool overlaps = other.OverlappingOnAxis(norm, this, out CollisionInfo col);
+				if (bestCol == null || col.Depth < bestCol.Depth) bestCol = col;
+				if (!overlaps) return false;
 			}
-			else return false;
+
+			Vector2 circleAxis = (other.Position - Position).Normalized();
+			bool circleOverlaps = other.OverlappingOnAxis(circleAxis, this, out CollisionInfo circleCol);
+			if (bestCol == null || circleCol.Depth < bestCol.Depth) bestCol = circleCol;
+			if (!circleOverlaps) return false;
+
+			LastCollision = bestCol;
+			return true;
 		}
 		private bool Overlapping(CircleCollider other)
 		{
 			float distanceSquared = (Position - other.Position).LengthSquared() - Radius * other.Radius;
 			if (distanceSquared <= 0)
 			{
-				CollisionInfo col = new CollisionInfo();
-				col.Normal = (other.Position - Position).Normalized();
-				col.PenetrationDepth = -Sqrt(distanceSquared);
+				CollisionInfo col = new CollisionInfo
+				{
+					Normal = (other.Position - Position).Normalized(),
+					Depth = -Sqrt(distanceSquared)
+				};
+				LastCollision = col;
 				return true;
 			}
 			else return false;
@@ -58,7 +70,29 @@ namespace GXPEngine.Physics
 
 		public override float RayCast(Ray ray)
 		{
-			throw new NotImplementedException();
+			Vector2 relative = Position - ray.Origin;
+
+			float a = Vector2.Dot(ray.Direction, ray.Direction);
+			float b = Vector2.Dot(-2 * ray.Direction, relative);
+			float c = Vector2.Dot(relative, relative) - Radius * Radius;
+			float D = MathUtils.GetDiscriminant(a, b, c);
+			if (D < 0) return float.PositiveInfinity;
+
+			// Get roots
+			(float rootA, float rootB) = MathUtils.GetRoots(D, a, b);
+			float t = Min(rootA, rootB);
+
+			if (t < 0)
+			{
+				// Earliest root is invalid, check other root
+				t = Max(rootA, rootB);
+				if (t < 0)
+				{
+					return float.PositiveInfinity;
+				}
+			}
+
+			return t;
 		}
 	}
 }

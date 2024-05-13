@@ -110,7 +110,7 @@ namespace GXPEngine.Physics
 				Vector2 norm = Normals[i];
 
 				bool overlaps = OverlappingOnAxis(norm, other, out CollisionInfo col);
-				if (bestCol == null || col.PenetrationDepth < bestCol.PenetrationDepth) bestCol = col;
+				if (bestCol == null || col.Depth < bestCol.Depth) bestCol = col;
 				if (!overlaps) return false;
 			}
 			// Axis checks for the other box
@@ -119,7 +119,7 @@ namespace GXPEngine.Physics
 				Vector2 norm = other.Normals[i];
 
 				bool overlaps = other.OverlappingOnAxis(norm, this, out CollisionInfo col);
-				if (bestCol == null || col.PenetrationDepth < bestCol.PenetrationDepth) bestCol = col;
+				if (bestCol == null || col.Depth < bestCol.Depth) bestCol = col;
 				if (!overlaps) return false;
 			}
 
@@ -135,13 +135,13 @@ namespace GXPEngine.Physics
 				Vector2 norm = Normals[i];
 
 				bool overlaps = OverlappingOnAxis(norm, other, out CollisionInfo col);
-				if (bestCol == null || col.PenetrationDepth < bestCol.PenetrationDepth) bestCol = col;
+				if (bestCol == null || col.Depth < bestCol.Depth) bestCol = col;
 				if (!overlaps) return false;
 			}
 
 			Vector2 circleAxis = (other.Position - Position).Normalized();
 			bool circleOverlaps = OverlappingOnAxis(circleAxis, other, out CollisionInfo circleCol);
-			if (bestCol == null || circleCol.PenetrationDepth < bestCol.PenetrationDepth) bestCol = circleCol;
+			if (bestCol == null || circleCol.Depth < bestCol.Depth) bestCol = circleCol;
 			if (!circleOverlaps) return false;
 
 			LastCollision = bestCol;
@@ -179,7 +179,7 @@ namespace GXPEngine.Physics
 				pDepth = 0;
 				collides = false;
 			}
-			if (Angle == other.Angle)
+			if (other is OBCollider && Angle == other.Angle)
 			{
 				normal = -normal;
 			}
@@ -298,12 +298,12 @@ namespace GXPEngine.Physics
 		public void DrawOverlapOnAxis(EasyDraw ed, Vector2 axis)
 		{
 			axis.Normalize();
-			var minmax = MinMaxBounds(axis);
+			var (min, max) = MinMaxBounds(axis);
 
 			//axis.y = -axis.y;
 
-			Vector2 a = axis * minmax.min;
-			Vector2 b = axis * minmax.max;
+			Vector2 a = axis * min;
+			Vector2 b = axis * max;
 			ed.Line(a.x, a.y, b.x, b.y);
 		}
 	}
