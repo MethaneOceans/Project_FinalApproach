@@ -7,7 +7,10 @@ namespace GXPEngine.Scenes
 		public override void Initialize()
 		{
 			base.Initialize();
-			Prism prism = new Prism();
+			Prism prism = new Prism()
+			{
+				Position = new Vector2(100, 700),
+			};
 			AddChild(prism);
 		}
 	}

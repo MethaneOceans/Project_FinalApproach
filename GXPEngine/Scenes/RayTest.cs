@@ -2,6 +2,7 @@
 using GXPEngine.Primitives;
 using System.Collections.Generic;
 using System.Drawing;
+using GXPEngine.Physics;
 
 namespace GXPEngine.Scenes
 {
@@ -112,13 +113,13 @@ namespace GXPEngine.Scenes
 				debugLayer.Fill(Color.Green);
 				foreach (EDBox box in boxes)
 				{
-					box.body.DrawCorners(debugLayer);
+					(box.body as OBCollider).DrawCorners(debugLayer);
 				}
 
 				debugLayer.Stroke(Color.Purple);
 				foreach (EDBox box in boxes)
 				{
-					box.body.DrawNormals(debugLayer);
+					(box.body as OBCollider).DrawNormals(debugLayer);
 				}
 			}
 		}

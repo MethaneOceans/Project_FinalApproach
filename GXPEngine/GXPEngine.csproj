@@ -97,10 +97,12 @@
     <Compile Include="Primitives\EDBox.cs" />
     <Compile Include="Primitives\EDCircle.cs" />
     <Compile Include="Physics\Ray.cs" />
+    <Compile Include="Primitives\PhysicsObject.cs" />
     <Compile Include="Prism.cs" />
     <Compile Include="Scenes\CircleTest.cs" />
     <Compile Include="Scenes\CollisionTest.cs" />
     <Compile Include="Scenes\PrismTest.cs" />
+    <Compile Include="Scenes\ProtoTest.cs" />
     <Compile Include="Scenes\RayTest.cs" />
   </ItemGroup>
   <ItemGroup>

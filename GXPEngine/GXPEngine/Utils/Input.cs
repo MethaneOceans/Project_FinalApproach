@@ -105,5 +105,7 @@ namespace GXPEngine
 		public static int mouseY {
 			get { return GLContext.mouseY; }
 		}
+
+		public static Vector2 mousePos => new Vector2(mouseX, mouseY);
 	}
 }
