@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using static GXPEngine.Mathf;
 
 namespace GXPEngine.Physics
@@ -77,6 +79,9 @@ namespace GXPEngine.Physics
 		private Vector2[] _normals;
 		private bool _normalsValid = false;
 
+		// ===================================
+		// Overlap checks
+		// ===================================
 		public OBCollider(Vector2 position, Vector2 size, float angle)
 		{
 			Position = position;
@@ -103,13 +108,11 @@ namespace GXPEngine.Physics
 			Vector2 normalD = (cornerD - cornerA).Normal();
 			baseNormals = new Vector2[4] { normalA, normalB, normalC, normalD };
 		}
-
 		public bool Overlapping(ICollider other)
 		{
 			if (other is OBCollider) return Overlapping(other as OBCollider);
 			else return false;
 		}
-
 		// Overlap test specifically for other boxes
 		private bool Overlapping(OBCollider other)
 		{
@@ -212,6 +215,60 @@ namespace GXPEngine.Physics
 			}
 
 			return (vMin, pMin, vMax, pMax);
+		}
+
+		// =====================================================
+		// Raycast methods
+		// =====================================================
+		public float RayCast(Ray ray)
+		{
+			// Steps for raycasting
+			// Translate origin and box so that box is at origin.
+			// Rotate direction and box so that box angle is 0
+			// Check raycast as if box is AABB
+
+			// Since the size gives the measurements of the box we don't have to rotate the box
+			Vector2 rOrigin = ray.Origin - Position;
+			rOrigin = rOrigin.RotatedDeg(-Angle);
+			Vector2 rDirection = ray.Direction.RotatedDeg(-Angle);
+
+			// Horizontal check
+			float tA = (-Size.x / 2f - rOrigin.x) / rDirection.x;
+			float tB = (Size.x / 2f - rOrigin.x) / rDirection.x;
+			float tNearHori = Min(tA, tB);
+			float tFarHori = Max(tA, tB);
+			if (tFarHori < 0) return -1;
+
+			// Vertical check
+			tA = (-Size.y / 2f - rOrigin.y) / rDirection.y;
+			tB = (Size.y / 2f - rOrigin.y) / rDirection.y;
+			float tNearVert = Min(tA, tB);
+			float tFarVert = Max(tA, tB);
+			if (tFarVert < 0) return float.NegativeInfinity;
+
+			float min = Max(tNearHori, tNearVert);
+			float max = Min(tFarHori, tFarVert);
+
+			if (min < max)
+			{
+				return min;
+			}
+			else return float.NegativeInfinity;
+		}
+
+		// =====================================================
+		// Normal calc methods
+		// =====================================================
+		public Vector2 NormalAt(Vector2 point)
+		{
+			point = (point - Position).RotatedDeg(-Angle - 45).Normalized();
+			bool right = point.x > 0;
+			bool top = point.y > 0;
+
+			if (right && top) return Normals[0];
+			else if (!right && top) return Normals[1];
+			else if (!right && !top) return Normals[2];
+			else return Normals[3];
 		}
 
 		// =====================================================

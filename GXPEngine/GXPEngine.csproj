@@ -96,6 +96,7 @@
     <Compile Include="Ray.cs" />
     <Compile Include="RayDrawn.cs" />
     <Compile Include="Scenes\CollisionTest.cs" />
+    <Compile Include="Scenes\RayTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

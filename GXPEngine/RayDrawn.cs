@@ -7,20 +7,20 @@ namespace GXPEngine
 	{
 		public Vector2 Origin
 		{
-			get => R.Origin;
+			get => Origin;
 			set
 			{
-				R.Origin = value;
+				Origin = value;
 				x = value.x;
 				y = value.y;
 			}
 		}
 		public Vector2 Direction
 		{
-			get => R.Direction;
+			get => Direction;
 			set
 			{
-				R.Direction = value;
+				Direction = value;
 				Rotation = Vector2.Rad2Deg(Atan2(value.y, value.x));
 			}
 		}

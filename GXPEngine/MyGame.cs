@@ -12,17 +12,17 @@ public class MyGame : Game {
 	private SceneManager sceneManager;
 	private EasyDraw fpsCounter;
 
-	public MyGame() : base(1200, 800, pFullScreen: false, pPixelArt: true)
+	public MyGame() : base(1600, 900, pFullScreen: false, pPixelArt: true)
 	{
 		sceneManager = new SceneManager(this);
-		sceneManager.AddScene("RayTest", new CollisionTest());
-		
+		sceneManager.AddScene("CollisionTest", new CollisionTest());
+		sceneManager.AddScene("RayTest", new RayTest());
 
 		// Show the fps
 		fpsCounter = new EasyDraw(200, 50);
 		fpsCounter.TextAlign(CenterMode.Min, CenterMode.Min);
 		AddChild(fpsCounter);
-		sceneManager.SwitchScene("RayTest");
+		sceneManager.SwitchScene("CollisionTest");
 
 		Console.WriteLine("MyGame initialized");
 	}
@@ -42,14 +42,8 @@ public class MyGame : Game {
 			sceneManager.Reload();
 		}
 
-		if (Input.GetKeyDown(Key.ONE))
-		{
-			sceneManager.SwitchScene("RayTest");
-		}	  // PhysicsTrigger
-		if (Input.GetKeyDown(Key.TWO))
-		{
-			
-		}	  // CircleStep
+		if (Input.GetKeyDown(Key.ONE)) sceneManager.SwitchScene("CollisionTest");
+		if (Input.GetKeyDown(Key.TWO)) sceneManager.SwitchScene("RayTest");
 		if (Input.GetKeyDown(Key.THREE))
 		{
 			
