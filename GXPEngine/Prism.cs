@@ -1,4 +1,4 @@
-﻿using GXPEngine.Physics;
+using GXPEngine.Physics;
 using GXPEngine.Primitives;
 using System;
 using System.Diagnostics;

@@ -1,4 +1,4 @@
-﻿using GXPEngine.Control;
+using GXPEngine.Control;
 using GXPEngine.Physics;
 using GXPEngine.Primitives;
 using System.Collections.Generic;
