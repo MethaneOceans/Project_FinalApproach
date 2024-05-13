@@ -49,18 +49,19 @@ namespace GXPEngine.Physics
 			if (bestCol == null || circleCol.Depth < bestCol.Depth) bestCol = circleCol;
 			if (!circleOverlaps) return false;
 
+			bestCol.Normal = -bestCol.Normal;
 			LastCollision = bestCol;
 			return true;
 		}
 		private bool Overlapping(CircleCollider other)
 		{
-			float distanceSquared = (Position - other.Position).LengthSquared() - Radius * other.Radius;
-			if (distanceSquared <= 0)
+			float distance = (Position - other.Position).Length() - Radius - other.Radius;
+			if (distance <= 0)
 			{
 				CollisionInfo col = new CollisionInfo
 				{
-					Normal = (other.Position - Position).Normalized(),
-					Depth = -Sqrt(distanceSquared)
+					Normal = -(Position - other.Position).Normalized(),
+					Depth = -distance
 				};
 				LastCollision = col;
 				return true;

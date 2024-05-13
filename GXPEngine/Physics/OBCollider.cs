@@ -126,6 +126,7 @@ namespace GXPEngine.Physics
 			if (bestCol == null || circleCol.Depth < bestCol.Depth) bestCol = circleCol;
 			if (!circleOverlaps) return false;
 
+			bestCol.Normal *= -1;
 			LastCollision = bestCol;
 			return true;
 		}
@@ -161,11 +162,12 @@ namespace GXPEngine.Physics
 				pDepth = 0;
 				collides = false;
 			}
-			if (other is OBCollider && Angle != other.Angle)
+
+			// Exception for same angle boxes
+			if (other is OBCollider && Angle == other.Angle)
 			{
 				normal = -normal;
 			}
-
 
 			colInfo = new CollisionInfo(normal, pDepth);
 			return collides;

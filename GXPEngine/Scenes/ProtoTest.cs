@@ -7,8 +7,7 @@ namespace GXPEngine.Scenes
 {
 	internal class ProtoTest : Scene
 	{
-		private List<ACollider> staticColliders;
-		private List<ACollider> movingColliders;
+		private List<ACollider> colliders;
 
 		public override void Initialize()
 		{
@@ -17,26 +16,29 @@ namespace GXPEngine.Scenes
 			EDBox floor = new EDBox(new Vector2(width / 2f, height - 100), new Vector2(1200, 100), 0);
 			AddChild(floor);
 
-			staticColliders = new List<ACollider>()
+			colliders = new List<ACollider>()
 			{
 				floor.body,
 			};
-			movingColliders = new List<ACollider>();
 		}
 
 		public void Update()
 		{
-			foreach(ACollider collider in movingColliders)
+			foreach(ACollider collider in colliders)
 			{
-				collider.Velocity += new Vector2(0, 0.1f);
-				collider.Step(staticColliders);
+				collider.Step(colliders);
 			}
 
-			if (Input.GetMouseButton(0))
+			if (Input.GetMouseButtonDown(0))
 			{
-				EDBox newBox = new EDBox(Input.mousePos, new Vector2(50, 50), 0.1f);
-				AddChild(newBox);
-				movingColliders.Add(newBox.body);
+				Vector2 aimFrom = new Vector2(100, height - height / 3);
+				Vector2 aimAt = Input.mousePos;
+				Vector2 initVelocity = (aimAt - aimFrom) / 30;
+
+				Prism2 prism = new Prism2(aimFrom, initVelocity, 5000);
+
+				AddChild(prism);
+				colliders.Add(prism.body);
 			}
 		}
 	}

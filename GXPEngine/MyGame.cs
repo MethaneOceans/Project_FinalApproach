@@ -12,7 +12,7 @@ public class MyGame : Game {
 	private readonly SceneManager sceneManager;
 	private readonly EasyDraw fpsCounter;
 
-	public MyGame() : base(1600, 900, pFullScreen: false, pPixelArt: true)
+	public MyGame() : base(1600, 900, pFullScreen: false, pPixelArt: false)
 	{
 		sceneManager = new SceneManager(this);
 		sceneManager.AddScene("CollisionTest", new CollisionTest());

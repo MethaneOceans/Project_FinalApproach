@@ -16,9 +16,10 @@ namespace GXPEngine.Scenes
 
 		private EasyDraw debugLayer;
 
-		private EDBox BoxA;
+		//private EDBox BoxA;
 		private EDCircle CircleA;
 		private EDCircle CircleB;
+		private EDCircle CircleC;
 
 		public override void Initialize()
 		{
@@ -27,13 +28,16 @@ namespace GXPEngine.Scenes
 
 			debugLayer = new EasyDraw(width, height);
 
-			BoxA = new EDBox(new Vector2(width / 2f, height / 2f), new Vector2(200, 200), 0);
+			CircleC = new EDCircle(new Vector2(width / 2f, height / 2f), 100);
+			//BoxA = new EDBox(new Vector2(width / 2f, height / 2f), new Vector2(200, 200), 0);
 			CircleA = new EDCircle(new Vector2(), 25);
 			CircleB = new EDCircle(CircleA.Position, 25);
+			CircleB.body.IsStatic = false;
 
-			AddChild(BoxA);
+			//AddChild(BoxA);
 			AddChild(CircleA);
 			AddChild(CircleB);
+			AddChild(CircleC);
 			AddChild(debugLayer);
 		}
 
@@ -42,21 +46,14 @@ namespace GXPEngine.Scenes
 			HandleInput();
 
 			//BoxA.Rotation -= 1;
+			
 			CircleA.Position = new Vector2(Input.mouseX, Input.mouseY);
 
 			CircleB.Rotation = CircleA.Rotation;
-			CircleB.Position = CircleA.Position + Vector2.GetUnitVectorDeg(CircleA.Rotation) * 200;
+			CircleB.Position = CircleA.Position;
+			CircleB.body.Velocity = Vector2.GetUnitVectorDeg(CircleA.Rotation) * 200;
 
-			if (CircleB.body.Overlapping(BoxA.body))
-			{
-				BoxA.ED.SetColor(1, 0, 0);
-				CircleB.ED.SetColor(1, 0, 0);
-			}
-			else
-			{
-				BoxA.ED.SetColor(0, 0, 1);
-				CircleB.ED.SetColor(0, 0, 1);
-			}
+			CircleB.body.Step(new ACollider[] { CircleC.body });
 
 			UpdateDebug();
 		}
@@ -89,11 +86,11 @@ namespace GXPEngine.Scenes
 			}
 
 			// Enables collision resolving
-			if (enableResolve)
-			{
-				var colInfo = CircleB.body.LastCollision;
-				CircleB.Position += colInfo.Normal * colInfo.Depth;
-			}
+			//if (enableResolve)
+			//{
+			//	var colInfo = CircleB.body.LastCollision;
+			//	CircleB.Position += colInfo.Normal * colInfo.Depth;
+			//}
 
 			// Show the corners of boxes
 		}
