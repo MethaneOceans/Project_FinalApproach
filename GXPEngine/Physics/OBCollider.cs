@@ -1,50 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using static GXPEngine.Mathf;
+﻿using static GXPEngine.Mathf;
 
 namespace GXPEngine.Physics
 {
 	/// <summary>
 	/// Oriented Box collider. Specifically not called OBB because it doesn't have bounding box functionality as of yet (if ever).
 	/// </summary>
-	internal partial class OBCollider : ICollider
+	internal partial class OBCollider : ACollider
 	{
 		public Vector2 Velocity;
-		public CollisionInfo LastCollision;
 		// Size field can't change, this to prevent unpredictable behavior.
 		public readonly Vector2 Size;
 
-		// ===================================
-		// Position property
-		// ===================================
-		public Vector2 Position
+		public new Vector2 Position
 		{
-			get => _position;
+			get => base.Position;
 			set
 			{
-				_position = value;
+				base.Position = value;
 				Invalidate();
 			}
 		}
-		private Vector2 _position;
-		// ===================================
-		// Angle property
-		// ===================================
-		public float Angle
+		public new float Angle
 		{
-			get => _angle;
+			get => base.Angle;
 			set
 			{
-				_angle = value;
+				base.Angle = value;
 				Invalidate();
 			}
 		}
-		private float _angle;
 
-		// ===================================
 		// Corners property
-		// ===================================
 		public Vector2[] Corners
 		{
 			get
@@ -60,9 +46,8 @@ namespace GXPEngine.Physics
 		private readonly Vector2[] baseCorners;
 		private Vector2[] _corners;
 		bool _cornersValid = false;
-		// ===================================
+
 		// Normals property
-		// ===================================
 		public Vector2[] Normals
 		{
 			get
@@ -108,21 +93,20 @@ namespace GXPEngine.Physics
 			Vector2 normalD = (cornerD - cornerA).Normal();
 			baseNormals = new Vector2[4] { normalA, normalB, normalC, normalD };
 		}
-		public bool Overlapping(ICollider other)
+		public override bool Overlapping(ACollider other)
 		{
 			if (other is OBCollider) return Overlapping(other as OBCollider);
+			if (other is CircleCollider) return Overlapping(other as CircleCollider);
 			else return false;
 		}
 		// Overlap test specifically for other boxes
 		private bool Overlapping(OBCollider other)
 		{
 			CollisionInfo bestCol = null;
-			int currentCheck = 0;
 
 			// Axis checks for this box
 			for (int i = 0; i < Normals.Length; i++)
 			{
-				currentCheck++;
 				Vector2 norm = Normals[i];
 
 				bool overlaps = OverlappingOnAxis(norm, other, out CollisionInfo col);
@@ -132,7 +116,6 @@ namespace GXPEngine.Physics
 			// Axis checks for the other box
 			for (int i = 0; i < other.Normals.Length; i++)
 			{
-				currentCheck++;
 				Vector2 norm = other.Normals[i];
 
 				bool overlaps = other.OverlappingOnAxis(norm, this, out CollisionInfo col);
@@ -143,9 +126,29 @@ namespace GXPEngine.Physics
 			LastCollision = bestCol;
 			return true;
 		}
+		private bool Overlapping(CircleCollider other)
+		{
+			CollisionInfo bestCol = null;
 
+			for (int i = 0; i < Normals.Length; i++)
+			{
+				Vector2 norm = Normals[i];
+
+				bool overlaps = OverlappingOnAxis(norm, other, out CollisionInfo col);
+				if (bestCol == null || col.PenetrationDepth < bestCol.PenetrationDepth) bestCol = col;
+				if (!overlaps) return false;
+			}
+
+			Vector2 circleAxis = (other.Position - Position).Normalized();
+			bool circleOverlaps = OverlappingOnAxis(circleAxis, other, out CollisionInfo circleCol);
+			if (bestCol == null || circleCol.PenetrationDepth < bestCol.PenetrationDepth) bestCol = circleCol;
+			if (!circleOverlaps) return false;
+
+			LastCollision = bestCol;
+			return true;
+		}
 		// Checks if the box overlaps with other box along a given axis
-		public bool OverlappingOnAxis(Vector2 axis, OBCollider other, out CollisionInfo colInfo)
+		public bool OverlappingOnAxis(Vector2 axis, ACollider other, out CollisionInfo colInfo)
 		{
 			float pDepth;
 			Vector2 normal;
@@ -153,8 +156,8 @@ namespace GXPEngine.Physics
 
 			axis.Normal();
 
-			(Vector2 vMinThis, float pMinThis, Vector2 vMaxThis, float pMaxThis) = MinMaxCorner(axis);
-			(Vector2 vMinOther, float pMinOther, Vector2 vMaxOther, float pMaxOther) = other.MinMaxCorner(axis);
+			(float pMinThis, float pMaxThis) = MinMaxBounds(axis);
+			(float pMinOther, float pMaxOther) = other.MinMaxBounds(axis);
 			
 			if (pMinThis < pMinOther && pMaxThis > pMinOther)
 			{
@@ -184,17 +187,14 @@ namespace GXPEngine.Physics
 			colInfo = new CollisionInfo(normal, pDepth);
 			return collides;
 		}
-
 		/// <summary>
 		/// Gets the minimum and maximum points along a given axis
 		/// </summary>
 		/// <param name="axis">Axis to compare the points on</param>
 		/// <returns>A tuple containing the min and max vectors and projected values</returns>
-		public (Vector2 vMin, float pMin, Vector2 vMax, float pMax) MinMaxCorner(Vector2 axis)
+		public override (float min, float max) MinMaxBounds(Vector2 axis)
 		{
-			Vector2 vMin = new Vector2();
 			float pMin = float.PositiveInfinity;
-			Vector2 vMax = new Vector2();
 			float pMax = float.NegativeInfinity;
 
 			for (int i = 0; i < Corners.Length; i++)
@@ -205,22 +205,21 @@ namespace GXPEngine.Physics
 				if (p < pMin)
 				{
 					pMin = p;
-					vMin = v;
 				}
 				if (p > pMax)
 				{
 					pMax = p;
-					vMax = v;
 				}
 			}
 
-			return (vMin, pMin, vMax, pMax);
+			return (pMin, pMax);
 		}
 
+
 		// =====================================================
-		// Raycast methods
+		// Raycast and normal calculation
 		// =====================================================
-		public float RayCast(Ray ray)
+		public override float RayCast(Ray ray)
 		{
 			// Steps for raycasting
 			// Translate origin and box so that box is at origin.
@@ -255,11 +254,7 @@ namespace GXPEngine.Physics
 			}
 			else return float.NegativeInfinity;
 		}
-
-		// =====================================================
-		// Normal calc methods
-		// =====================================================
-		public Vector2 NormalAt(Vector2 point)
+		public override Vector2 NormalAt(Vector2 point)
 		{
 			point = (point - Position).RotatedDeg(-Angle - 45).Normalized();
 			bool right = point.x > 0;
@@ -303,12 +298,12 @@ namespace GXPEngine.Physics
 		public void DrawOverlapOnAxis(EasyDraw ed, Vector2 axis)
 		{
 			axis.Normalize();
-			var minmax = MinMaxCorner(axis);
+			var minmax = MinMaxBounds(axis);
 
 			//axis.y = -axis.y;
 
-			Vector2 a = axis * minmax.pMin;
-			Vector2 b = axis * minmax.pMax;
+			Vector2 a = axis * minmax.min;
+			Vector2 b = axis * minmax.max;
 			ed.Line(a.x, a.y, b.x, b.y);
 		}
 	}
