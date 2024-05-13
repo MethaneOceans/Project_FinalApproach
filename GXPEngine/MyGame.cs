@@ -12,13 +12,12 @@ public class MyGame : Game {
 	private readonly SceneManager sceneManager;
 	private readonly EasyDraw fpsCounter;
 
-	public MyGame() : base(1600, 900, pFullScreen: false, pPixelArt: true)
+	public MyGame() : base(1600, 900, pFullScreen: false, pPixelArt: false)
 	{
 		sceneManager = new SceneManager(this);
 		sceneManager.AddScene("CollisionTest", new CollisionTest());
 		sceneManager.AddScene("RayTest", new RayTest());
 		sceneManager.AddScene("CircleTest", new CircleTest());
-		sceneManager.AddScene("PrismTest", new PrismTest());
 		sceneManager.AddScene("ProtoTest", new ProtoTest());
 
 		// Show the fps
@@ -40,36 +39,12 @@ public class MyGame : Game {
 
 	private void HandleInput()
 	{
-		if (Input.GetKeyDown(Key.R))
-		{
-			sceneManager.Reload();
-		}
+		if (Input.GetKeyDown(Key.R)) sceneManager.Reload();
 
 		if (Input.GetKeyDown(Key.ONE)) sceneManager.SwitchScene("CollisionTest");
 		if (Input.GetKeyDown(Key.TWO)) sceneManager.SwitchScene("RayTest");
 		if (Input.GetKeyDown(Key.THREE)) sceneManager.SwitchScene("CircleTest");
-		if (Input.GetKeyDown(Key.FOUR)) sceneManager.SwitchScene("PrismTest");
-		if (Input.GetKeyDown(Key.FIVE)) sceneManager.SwitchScene("ProtoTest");
-		if (Input.GetKeyDown(Key.SIX))
-		{
-
-		}
-		if (Input.GetKeyDown(Key.SEVEN))
-		{
-
-		}
-		if (Input.GetKeyDown(Key.EIGHT))
-		{
-
-		}
-		if (Input.GetKeyDown(Key.NINE))
-		{
-
-		}
-		if (Input.GetKeyDown(Key.ZERO))
-		{
-
-		}
+		if (Input.GetKeyDown(Key.FOUR)) sceneManager.SwitchScene("ProtoTest");
 	}
 	static void Main()
 	{

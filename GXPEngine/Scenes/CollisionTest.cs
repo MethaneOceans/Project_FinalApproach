@@ -15,7 +15,8 @@ namespace GXPEngine.Scenes
 
 		private EasyDraw debugLayer;
 
-		private EDBox BoxA;
+		//private EDBox BoxA;
+		private EDCircle CircleA;
 		private EDBox BoxB;
 		private EDBox BoxC;
 
@@ -27,12 +28,14 @@ namespace GXPEngine.Scenes
 			debugLayer = new EasyDraw(width, height);
 
 			Vector2 size = new Vector2(50, 50);
-
-			BoxA = new EDBox(new Vector2(width / 2f, height / 2f), new Vector2(200, 200), 0);
+			//BoxA = new EDBox(new Vector2(width / 2f, height / 2f), new Vector2(200, 200), 0);
+			CircleA = new EDCircle(new Vector2(width / 2f, height / 2f), 100);
 			BoxB = new EDBox(new Vector2(), size, 0);
 			BoxC = new EDBox(BoxB.Position, size, 0);
+			BoxC.body.IsStatic = false;
 
-			AddChild(BoxA);
+			//AddChild(BoxA);
+			AddChild(CircleA);
 			AddChild(BoxB);
 			AddChild(BoxC);
 			AddChild(debugLayer);
@@ -48,7 +51,9 @@ namespace GXPEngine.Scenes
 			BoxC.Rotation = BoxB.Rotation;
 			BoxC.Position = BoxB.Position;
 			BoxC.body.Velocity = Vector2.GetUnitVectorDeg(BoxB.Rotation) * 200;
-			BoxC.body.Step(new ACollider[]{ BoxA.body });
+
+			//BoxC.body.Step(new ACollider[]{ BoxA.body });
+			BoxC.body.Step(new ACollider[]{ CircleA.body });
 
 			//if (BoxC.body.Overlapping(BoxA.body))
 			//{

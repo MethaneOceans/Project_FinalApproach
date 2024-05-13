@@ -15,7 +15,6 @@ namespace GXPEngine.Physics
 			}
 		}
 		Vector2 _position;
-		bool _positionChanged;
 
 		public Vector2 Velocity;
 		public float Angle
@@ -28,15 +27,16 @@ namespace GXPEngine.Physics
 			}
 		}
 		private float _angle;
-		private bool _angleChanged;
 
 		public bool IsColliding;
 		public CollisionInfo LastCollision;
+		public bool IsStatic;
 
 		public ACollider(PhysicsObject owner)
 		{
 			Owner = owner;
 			IsColliding = false;
+			IsStatic = true;
 		}
 
 		public abstract bool Overlapping(ACollider other);
@@ -46,29 +46,36 @@ namespace GXPEngine.Physics
 
 		public void Step(ICollection<ACollider> colliderList)
 		{
-			Position += Velocity;
-
-			bool collided = false;
-			CollisionInfo bestCol = new CollisionInfo();
-
-			foreach (ACollider collider in colliderList)
+			if (!IsStatic)
 			{
-				if (Overlapping(collider))
+				Position += Velocity;
+
+				bool collided = false;
+				CollisionInfo bestCol = new CollisionInfo();
+
+				foreach (ACollider collider in colliderList)
 				{
-					CollisionInfo colInfo = LastCollision;
-					if (colInfo.Depth > bestCol.Depth)
+					if (collider == this) continue;
+					if (Overlapping(collider))
 					{
-						bestCol = colInfo;
+						CollisionInfo colInfo = LastCollision;
+						if (colInfo.Depth > bestCol.Depth)
+						{
+							bestCol = colInfo;
+						}
+						collided = true;
 					}
-					collided = true;
 				}
-			}
-			if (collided)
-			{
-				Position -= bestCol.Normal * bestCol.Depth;
-			}
+				if (collided)
+				{
+					Position -= bestCol.Normal * bestCol.Depth;
 
-			Owner.Position = Position;
+					Vector2 q = Vector2.Dot(bestCol.Normal, Velocity) * bestCol.Normal;
+					Velocity -= (2 * 0.9f) * q;
+				}
+
+				Owner.Position = Position;
+			}
 		}
 		protected abstract void Invalidate();
 	}
