@@ -7,28 +7,8 @@ namespace GXPEngine.Physics
 	/// </summary>
 	internal partial class OBCollider : ACollider
 	{
-		public Vector2 Velocity;
 		// Size field can't change, this to prevent unpredictable behavior.
 		public readonly Vector2 Size;
-
-		public new Vector2 Position
-		{
-			get => base.Position;
-			set
-			{
-				base.Position = value;
-				Invalidate();
-			}
-		}
-		public new float Angle
-		{
-			get => base.Angle;
-			set
-			{
-				base.Angle = value;
-				Invalidate();
-			}
-		}
 
 		// Corners property
 		public Vector2[] Corners
@@ -67,7 +47,7 @@ namespace GXPEngine.Physics
 		// ===================================
 		// Overlap checks
 		// ===================================
-		public OBCollider(Vector2 position, Vector2 size, float angle)
+		public OBCollider(Vector2 position, Vector2 size, float angle, PhysicsObject owner) : base(owner)
 		{
 			Position = position;
 			Size = size;
@@ -95,9 +75,11 @@ namespace GXPEngine.Physics
 		}
 		public override bool Overlapping(ACollider other)
 		{
-			if (other is OBCollider) return Overlapping(other as OBCollider);
-			if (other is CircleCollider) return Overlapping(other as CircleCollider);
-			else return false;
+			bool result = false;
+			if (other is OBCollider) result = Overlapping(other as OBCollider);
+			else if (other is CircleCollider) result = Overlapping(other as CircleCollider);
+			
+			return result;
 		}
 		// Overlap test specifically for other boxes
 		private bool Overlapping(OBCollider other)
@@ -179,10 +161,11 @@ namespace GXPEngine.Physics
 				pDepth = 0;
 				collides = false;
 			}
-			if (other is OBCollider && Angle == other.Angle)
+			if (other is OBCollider && Angle != other.Angle)
 			{
 				normal = -normal;
 			}
+
 
 			colInfo = new CollisionInfo(normal, pDepth);
 			return collides;
@@ -267,15 +250,6 @@ namespace GXPEngine.Physics
 		}
 
 		// =====================================================
-		// Property management methods
-		// =====================================================
-		private void Invalidate()
-		{
-			_cornersValid = false;
-			_normalsValid = false;
-		}
-
-		// =====================================================
 		// Debugging methods
 		// =====================================================
 		public void DrawNormals(EasyDraw ed)
@@ -305,6 +279,12 @@ namespace GXPEngine.Physics
 			Vector2 a = axis * min;
 			Vector2 b = axis * max;
 			ed.Line(a.x, a.y, b.x, b.y);
+		}
+
+		protected override void Invalidate()
+		{
+			_cornersValid = false;
+			_normalsValid = false;
 		}
 	}
 }

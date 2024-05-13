@@ -1,4 +1,5 @@
 ﻿using GXPEngine.Control;
+using GXPEngine.Physics;
 using GXPEngine.Primitives;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,7 +12,6 @@ namespace GXPEngine.Scenes
 		// Debug properties
 		private bool showCorners = false;
 		private bool showColInfo = false;
-		private bool enableResolve = true;
 
 		private EasyDraw debugLayer;
 
@@ -30,7 +30,7 @@ namespace GXPEngine.Scenes
 
 			BoxA = new EDBox(new Vector2(width / 2f, height / 2f), new Vector2(200, 200), 0);
 			BoxB = new EDBox(new Vector2(), size, 0);
-			BoxC = new EDBox(BoxB.Position, BoxB.body.Size, BoxB.Rotation);
+			BoxC = new EDBox(BoxB.Position, size, 0);
 
 			AddChild(BoxA);
 			AddChild(BoxB);
@@ -46,18 +46,20 @@ namespace GXPEngine.Scenes
 			BoxB.Position = new Vector2(Input.mouseX, Input.mouseY);
 
 			BoxC.Rotation = BoxB.Rotation;
-			BoxC.Position = BoxB.Position + Vector2.GetUnitVectorDeg(BoxB.Rotation) * 200;
-			
-			if (BoxC.body.Overlapping(BoxA.body))
-			{
-				BoxA.ED.SetColor(1, 0, 0);
-				BoxC.ED.SetColor(1, 0, 0);
-			}
-			else
-			{
-				BoxA.ED.SetColor(0, 0, 1);
-				BoxC.ED.SetColor(0, 0, 1);
-			}
+			BoxC.Position = BoxB.Position;
+			BoxC.body.Velocity = Vector2.GetUnitVectorDeg(BoxB.Rotation) * 200;
+			BoxC.body.Step(new ACollider[]{ BoxA.body });
+
+			//if (BoxC.body.Overlapping(BoxA.body))
+			//{
+			//	BoxA.ED.SetColor(1, 0, 0);
+			//	BoxC.ED.SetColor(1, 0, 0);
+			//}
+			//else
+			//{
+			//	BoxA.ED.SetColor(0, 0, 1);
+			//	BoxC.ED.SetColor(0, 0, 1);
+			//}
 
 			UpdateDebug();
 		}
@@ -68,7 +70,6 @@ namespace GXPEngine.Scenes
 			if (Input.GetKey(Key.Q)) BoxB.Rotation -= 1;
 			if (Input.GetKeyDown(Key.F1)) showCorners = !showCorners;
 			if (Input.GetKeyDown(Key.F2)) showColInfo = !showColInfo;
-			if (Input.GetKeyDown(Key.F3)) enableResolve = !enableResolve;
 		}
 
 		// Updates the debug easydraw object
@@ -89,31 +90,24 @@ namespace GXPEngine.Scenes
 				debugLayer.Line(a.x, a.y, b.x, b.y);
 			}
 
-			// Enables collision resolving
-			if (enableResolve)
-			{
-				var colInfo = BoxC.body.LastCollision;
-				BoxC.Position += colInfo.Normal * colInfo.Depth;
-			}
-
 			// Show the corners of boxes
-			if (showCorners)
-			{
-				List<EDBox> boxes = new List<EDBox>() { BoxA, BoxB, BoxC };
+			//if (showCorners)
+			//{
+			//	List<EDBox> boxes = new List<EDBox>() { BoxA, BoxB, BoxC };
 
-				debugLayer.NoStroke();
-				debugLayer.Fill(Color.Green);
-				foreach (EDBox box in boxes)
-				{
-					box.body.DrawCorners(debugLayer);
-				}
+			//	debugLayer.NoStroke();
+			//	debugLayer.Fill(Color.Green);
+			//	foreach (EDBox box in boxes)
+			//	{
+			//		box.body.DrawCorners(debugLayer);
+			//	}
 
-				debugLayer.Stroke(Color.Purple);
-				foreach (EDBox box in boxes)
-				{
-					box.body.DrawNormals(debugLayer);
-				}
-			}
+			//	debugLayer.Stroke(Color.Purple);
+			//	foreach (EDBox box in boxes)
+			//	{
+			//		box.body.DrawNormals(debugLayer);
+			//	}
+			//}
 		}
 	}
 }

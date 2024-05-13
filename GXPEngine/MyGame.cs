@@ -25,7 +25,7 @@ public class MyGame : Game {
 		fpsCounter = new EasyDraw(200, 50);
 		fpsCounter.TextAlign(CenterMode.Min, CenterMode.Min);
 		AddChild(fpsCounter);
-		sceneManager.SwitchScene("CollisionTest");
+		sceneManager.SwitchScene("ProtoTest");
 
 		Console.WriteLine("MyGame initialized");
 	}

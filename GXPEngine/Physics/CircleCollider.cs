@@ -7,7 +7,7 @@ namespace GXPEngine.Physics
 	{
 		public float Radius;
 
-		public CircleCollider(Vector2 center, float radius)
+		public CircleCollider(Vector2 center, float radius, PhysicsObject owner) : base(owner)
 		{
 			Position = center;
 			Radius = radius;
@@ -93,6 +93,11 @@ namespace GXPEngine.Physics
 			}
 
 			return t;
+		}
+
+		protected override void Invalidate()
+		{
+			
 		}
 	}
 }
