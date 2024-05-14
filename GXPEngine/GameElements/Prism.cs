@@ -8,9 +8,9 @@ namespace GXPEngine
 {
 	internal class Prism : EDBox
 	{
-		private Stopwatch stopwatch;
-		private Sprite sprite;
-		private float TimeToLive = 1000;
+		private readonly Stopwatch stopwatch;
+		//private Sprite sprite;
+		private readonly float TimeToLive = 1000;
 
 		public Prism(Vector2 position, Vector2 velocity) : base(position, new Vector2(75, 75), 0)
 		{
@@ -22,7 +22,7 @@ namespace GXPEngine
 			//sprite.SetOrigin(sprite.width / 2, sprite.height / 2);
 			//AddChild(sprite);
 
-			float doubleR = 100;
+			//float doubleR = 100;
 			//sprite.scale = doubleR / sprite.width;
 			//Console.WriteLine(sprite.width / doubleR);
 
