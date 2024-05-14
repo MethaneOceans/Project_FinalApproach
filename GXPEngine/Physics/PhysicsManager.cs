@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System;
-using GXPEngine.Core;
 using static GXPEngine.Physics.ACollider;
 
 namespace GXPEngine.Physics
@@ -8,11 +7,11 @@ namespace GXPEngine.Physics
 	internal class PhysicsManager
 	{
 		public List<ACollider> Objects => bodies;
-		private List<ACollider> bodies;
 
-		private List<ACollider> staticColliders;
-		private List<ACollider> triggerColliders;
-		private List<ACollider> rigidColliders;
+		private readonly List<ACollider> bodies;
+		private readonly List<ACollider> staticColliders;
+		private readonly List<ACollider> triggerColliders;
+		private readonly List<ACollider> rigidColliders;
 
 		private bool ActiveStep;
 
@@ -36,11 +35,28 @@ namespace GXPEngine.Physics
 			{
 				bodies.Add(obj);
 
-				if (obj.Behavior == ACollider.ColliderType.Static) staticColliders.Add(obj);
-				else if (obj.Behavior == ACollider.ColliderType.Rigid) rigidColliders.Add(obj);
-				else if (obj.Behavior == ACollider.ColliderType.Trigger) triggerColliders.Add(obj);
+				if (obj.Behavior == ColliderType.Static) staticColliders.Add(obj);
+				else if (obj.Behavior == ColliderType.Rigid) rigidColliders.Add(obj);
+				else if (obj.Behavior == ColliderType.Trigger) triggerColliders.Add(obj);
 
 				obj.BehaviorChanged += BehaviorChangeHandler;
+			}
+		}
+		public void Remove(ACollider obj)
+		{
+			if (ActiveStep)
+			{
+				throw new InvalidOperationException("Currently running a step, cannot remove object");
+			}
+			else
+			{
+				bodies.Remove(obj);
+
+				if (obj.Behavior == ColliderType.Static) staticColliders.Remove(obj);
+				else if (obj.Behavior == ColliderType.Rigid) rigidColliders.Remove(obj);
+				else if (obj.Behavior == ColliderType.Trigger) triggerColliders.Remove(obj);
+
+				obj.BehaviorChanged -= BehaviorChangeHandler;
 			}
 		}
 
@@ -60,14 +76,7 @@ namespace GXPEngine.Physics
 		{
 			if (obj.Behavior == ColliderType.Rigid)
 			{
-				foreach (ACollider trigger in triggerColliders)
-				{
-					if (obj.Overlapping(trigger))
-					{
-						// Should apply forces
-						trigger.TriggerMethod(trigger, obj);
-					}
-				}
+				Step_Triggers(obj);
 
 				// Copied from ACollider
 				obj.Position += obj.Velocity;
@@ -97,6 +106,17 @@ namespace GXPEngine.Physics
 				}
 
 				obj.Owner.Position = obj.Position;
+			}
+		}
+		private void Step_Triggers(ACollider obj)
+		{
+			foreach (ACollider trigger in triggerColliders)
+			{
+				if (obj.Overlapping(trigger))
+				{
+					// Should apply forces
+					trigger.TriggerMethod(trigger, obj);
+				}
 			}
 		}
 

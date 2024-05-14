@@ -6,7 +6,7 @@ using GXPEngine.Primitives;
 
 namespace GXPEngine.Scenes
 {
-	internal class TriggerTest : Scene
+	internal class TestLevel : Scene
 	{
 		PhysicsManager PhysManager;
 		List<PhysicsObject> Objects;
@@ -88,3 +88,4 @@ namespace GXPEngine.Scenes
 		}
 	}
 }
+
