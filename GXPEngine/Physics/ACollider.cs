@@ -84,7 +84,7 @@ namespace GXPEngine.Physics
 
 		public void Step(ICollection<ACollider> colliderList)
 		{
-			if (Behavior == ColliderType.Static)
+			if (Behavior != ColliderType.Static)
 			{
 				Position += Velocity;
 

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
+using GXPEngine.Core;
+using static GXPEngine.Physics.ACollider;
 
 namespace GXPEngine.Physics
 {
@@ -26,7 +28,7 @@ namespace GXPEngine.Physics
 		
 		public void Add(ACollider obj)
 		{
-			if (!ActiveStep)
+			if (ActiveStep)
 			{
 				throw new InvalidOperationException("Currently running a step, cannot add object");
 			}
@@ -48,39 +50,68 @@ namespace GXPEngine.Physics
 
 			foreach (ACollider obj in rigidColliders)
 			{
-				if (obj.Behavior == ACollider.ColliderType.Rigid)
-				{
-					foreach (ACollider trigger in triggerColliders)
-					{
-						if (obj.Overlapping(trigger))
-						{
-							// Should apply forces
-							trigger.TriggerMethod(trigger, obj);
-						}
-					}
-				}
+				Step(obj);
 			}
 			
 			ActiveStep = false;
 		}
 
-		private void Step(ACollider collider)
+		private void Step(ACollider obj)
 		{
+			if (obj.Behavior == ColliderType.Rigid)
+			{
+				foreach (ACollider trigger in triggerColliders)
+				{
+					if (obj.Overlapping(trigger))
+					{
+						// Should apply forces
+						trigger.TriggerMethod(trigger, obj);
+					}
+				}
 
+				// Copied from ACollider
+				obj.Position += obj.Velocity;
+
+				bool collided = false;
+				CollisionInfo bestCol = new CollisionInfo();
+
+				foreach (ACollider collider in bodies)
+				{
+					if (collider == obj || collider.Behavior == ColliderType.Trigger) continue;
+					if (obj.Overlapping(collider))
+					{
+						CollisionInfo colInfo = obj.LastCollision;
+						if (colInfo.Depth > bestCol.Depth)
+						{
+							bestCol = colInfo;
+						}
+						collided = true;
+					}
+				}
+				if (collided)
+				{
+					obj.Position -= bestCol.Normal * bestCol.Depth;
+
+					Vector2 q = Vector2.Dot(bestCol.Normal, obj.Velocity) * bestCol.Normal;
+					obj.Velocity -= (2 * 0.9f) * q;
+				}
+
+				obj.Owner.Position = obj.Position;
+			}
 		}
 
 		private void BehaviorChangeHandler(object sender, ACollider.BehaviorChangeEvent args)
 		{
-			ACollider.ColliderType oldB = args.OldBehavior;
-			ACollider.ColliderType newB = args.NewBehavior;
+			ColliderType oldB = args.OldBehavior;
+			ColliderType newB = args.NewBehavior;
 
-			if (oldB == ACollider.ColliderType.Rigid) rigidColliders.Remove((ACollider)sender);
-			else if (oldB == ACollider.ColliderType.Trigger) triggerColliders.Remove((ACollider)sender);
-			else if (oldB == ACollider.ColliderType.Rigid) rigidColliders.Remove((ACollider)sender);
+			if (oldB == ColliderType.Rigid) rigidColliders.Remove((ACollider)sender);
+			else if (oldB == ColliderType.Trigger) triggerColliders.Remove((ACollider)sender);
+			else if (oldB == ColliderType.Rigid) rigidColliders.Remove((ACollider)sender);
 
-			if (newB == ACollider.ColliderType.Rigid) rigidColliders.Add((ACollider)sender);
-			else if (newB == ACollider.ColliderType.Trigger) triggerColliders.Add((ACollider)sender);
-			else if (newB == ACollider.ColliderType.Rigid) rigidColliders.Add((ACollider)sender);
+			if (newB == ColliderType.Rigid) rigidColliders.Add((ACollider)sender);
+			else if (newB == ColliderType.Trigger) triggerColliders.Add((ACollider)sender);
+			else if (newB == ColliderType.Rigid) rigidColliders.Add((ACollider)sender);
 		}
 	}
 }

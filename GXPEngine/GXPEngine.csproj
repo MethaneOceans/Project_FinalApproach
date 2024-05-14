@@ -105,6 +105,7 @@
     <Compile Include="Scenes\LaserTest.cs" />
     <Compile Include="Scenes\ProtoTest.cs" />
     <Compile Include="Scenes\RayTest.cs" />
+    <Compile Include="Scenes\TriggerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
