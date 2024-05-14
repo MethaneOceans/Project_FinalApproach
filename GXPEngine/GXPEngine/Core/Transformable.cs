@@ -18,6 +18,8 @@ namespace GXPEngine
 		protected float _rotation = 0.0f;
 		protected float _scaleX = 1.0f;
 		protected float _scaleY = 1.0f;
+
+		
 		
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Transform()
@@ -72,7 +74,7 @@ namespace GXPEngine
 			get { return _matrix[13]; }
 			set { _matrix[13] = value; }
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														SetXY
 		//------------------------------------------------------------------------------------------------------------------------
@@ -91,20 +93,33 @@ namespace GXPEngine
 		}
 
 		//------------------------------------------------------------------------------------------------------------------------
+		//											 Vector position property
+		//------------------------------------------------------------------------------------------------------------------------
+		public Vector2 Position
+		{
+			get => new Vector2(x, y);
+			set
+			{
+				x = value.x;
+				y = value.y;
+			}
+		}
+
+		//------------------------------------------------------------------------------------------------------------------------
 		//													InverseTransformPoint()
 		//------------------------------------------------------------------------------------------------------------------------
-		/// <summary>
-		/// Transforms the point from the game's global space to this object's local space.
-		/// </summary>
-		/// <returns>
-		/// The point.
-		/// </returns>
-		/// <param name='x'>
-		/// The x coordinate.
-		/// </param>
-		/// <param name='y'>
-		/// The y coordinate.
-		/// </param>
+				/// <summary>
+				/// Transforms the point from the game's global space to this object's local space.
+				/// </summary>
+				/// <returns>
+				/// The point.
+				/// </returns>
+				/// <param name='x'>
+				/// The x coordinate.
+				/// </param>
+				/// <param name='y'>
+				/// The y coordinate.
+				/// </param>
 		public virtual Vector2 InverseTransformPoint (float x, float y)
 		{
 			Vector2 ret = new Vector2 ();
@@ -183,7 +198,12 @@ namespace GXPEngine
 		/// <value>
 		/// The rotation.
 		/// </value>
-		public float rotation {
+		public float rotation
+		{
+			get => Rotation;
+			set => Rotation = value;
+		}
+		public float Rotation {
 			get { return _rotation; }
 			set {
 				_rotation = value;
@@ -207,7 +227,7 @@ namespace GXPEngine
 		/// Angle.
 		/// </param>
 		public void Turn (float angle) {
-			rotation = _rotation + angle;
+			Rotation = _rotation + angle;
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------

@@ -232,13 +232,70 @@ public struct Vector2
     {
         return GetUnitVectorDeg(Random.Next(360));
     }
+
+    public Vector2 RotatedRad(float angle)
+    {
+        float xComp = Cos(angle) * x - Sin(angle) * y;
+        float yComp = Sin(angle) * x + Cos(angle) * y;
+        return new Vector2(xComp, yComp);
+    }
+    public Vector2 RotatedDeg(float angle)
+    {
+        return RotatedRad(Deg2Rad(angle));
+    }
     /// <summary>
-    /// Rotates a vector around a given point
+    /// Rotates an array of vectors
     /// </summary>
-    /// <param name="point"><c>Vector2</c> representing a pivot point</param>
-    /// <param name="radians">Angle to rotate the instance by</param>
-    /// <returns>Rotated copy of this</returns>
-    public Vector2 RotateAroundRadians(Vector2 point, float radians)
+    /// <param name="vecs"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+	public static Vector2[] RotateVectorsRad(Vector2[] vecs, float angle)
+	{
+		float cosA = Cos(angle);
+		float sinA = Sin(angle);
+
+		Vector2[] result = new Vector2[vecs.Length];
+		for (int i = 0; i < vecs.Length; i++)
+		{
+			float x = vecs[i].x;
+			float y = vecs[i].y;
+
+			result[i] = new Vector2(cosA * x - sinA * y, sinA * x + cosA * y);
+		}
+
+		return result;
+	}
+	/// <summary>
+	/// Rotates an array of vectors
+	/// </summary>
+	/// <param name="vecs"></param>
+	/// <param name="angle"></param>
+	/// <returns></returns>
+	public static Vector2[] RotateVectorsDeg(Vector2[] vecs, float angle)
+	{
+		angle = Deg2Rad(angle);
+		float cosA = Cos(angle);
+		float sinA = Sin(angle);
+
+		Vector2[] result = new Vector2[vecs.Length];
+		for (int i = 0; i < vecs.Length; i++)
+		{
+			float x = vecs[i].x;
+			float y = vecs[i].y;
+
+			result[i] = new Vector2(cosA * x - sinA * y, sinA * x + cosA * y);
+		}
+
+		return result;
+	}
+
+	/// <summary>
+	/// Rotates a vector around a given point
+	/// </summary>
+	/// <param name="point"><c>Vector2</c> representing a pivot point</param>
+	/// <param name="radians">Angle to rotate the instance by</param>
+	/// <returns>Rotated copy of this</returns>
+	public Vector2 RotateAroundRadians(Vector2 point, float radians)
     {
         Vector2 translated = this - point;
         translated.Radians += radians;

@@ -41,8 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Circle.cs" />
-    <Compile Include="Control\PhysicsScene.cs" />
+    <Compile Include="GameElements\Beam.cs" />
+    <Compile Include="GameElements\Goal.cs" />
+    <Compile Include="MathUtils.cs" />
+    <Compile Include="GameElements\Mirror.cs" />
+    <Compile Include="Physics\CircleCollider.cs" />
+    <Compile Include="Physics\CollisionInfo.cs" />
+    <Compile Include="Physics\PhysicsManager.cs" />
+    <Compile Include="Primitives\Circle.cs" />
     <Compile Include="Control\Scene.cs" />
     <Compile Include="Control\SceneManager.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -87,22 +93,21 @@
     <Compile Include="GXPEngine\FMOD\FMODSoundSystem.cs" />
     <Compile Include="GXPEngine\SoLoud\Soloud.cs" />
     <Compile Include="GXPEngine\SoLoud\SoloudSoundSystem.cs" />
-    <Compile Include="Physics\Colliders\CircleCollider.cs" />
-    <Compile Include="Physics\Colliders\Collider.cs" />
-    <Compile Include="Physics\Colliders\LineSegmentCollider.cs" />
-    <Compile Include="Physics\Colliders\ColliderType.cs" />
-    <Compile Include="Physics\CollisionEvent.cs" />
-    <Compile Include="Physics\CollisionInfo.cs" />
-    <Compile Include="Physics\PhysicsManager.cs" />
-    <Compile Include="Physics\Colliders\AABB.cs" />
-    <Compile Include="Physics\Primitives\PhysicsObject.cs" />
-    <Compile Include="Physics\Primitives\CircleObject.cs" />
-    <Compile Include="Physics\Primitives\LineSegObject.cs" />
-    <Compile Include="Physics\Primitives\PhysicsED.cs" />
-    <Compile Include="Physics\QuadraticSolver.cs" />
-    <Compile Include="Ray.cs" />
-    <Compile Include="RayDrawn.cs" />
-    <Compile Include="Scenes\RayTest.cs" />
+    <Compile Include="Physics\ACollider.cs" />
+    <Compile Include="Physics\OBCollider.cs" />
+    <Compile Include="Primitives\Box.cs" />
+    <Compile Include="Primitives\EDBox.cs" />
+    <Compile Include="Primitives\EDCircle.cs" />
+    <Compile Include="Physics\Ray.cs" />
+    <Compile Include="Physics\PhysicsObject.cs" />
+    <Compile Include="GameElements\Prism.cs" />
+    <Compile Include="Scenes\TestLevel.cs" />
+    <Compile Include="Scenes\Unused\CircleTest.cs" />
+    <Compile Include="Scenes\Unused\CollisionTest.cs" />
+    <Compile Include="Scenes\LaserTest.cs" />
+    <Compile Include="Scenes\ProtoTest.cs" />
+    <Compile Include="Scenes\Unused\RayTest.cs" />
+    <Compile Include="Scenes\TriggerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

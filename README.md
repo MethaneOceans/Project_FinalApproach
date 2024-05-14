@@ -28,3 +28,4 @@
 - [ ] - Lock the prism in place
 - [ ] - Rotate the prism
 - [ ] - Cast new rays from prism object
+- [x] - Aim catapult at mouse
