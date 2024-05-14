@@ -15,7 +15,7 @@ namespace GXPEngine
 		public Prism(Vector2 position, Vector2 velocity) : base(position, new Vector2(75, 75), 0)
 		{
 			body.Velocity = velocity;
-			body.IsStatic = false;
+			body.Behavior = ACollider.ColliderType.Rigid;
 
 			//sprite = new Sprite("circle.png");
 
@@ -36,11 +36,11 @@ namespace GXPEngine
 
 		public void Update()
 		{
-			if (!body.IsStatic)
+			if (body.Behavior != ACollider.ColliderType.Static)
 			{
 				if (stopwatch.ElapsedMilliseconds > TimeToLive)
 				{
-					body.IsStatic = true;
+					body.Behavior = ACollider.ColliderType.Static;
 				}
 			}
 		}

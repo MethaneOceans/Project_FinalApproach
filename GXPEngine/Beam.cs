@@ -10,7 +10,6 @@ namespace GXPEngine
 		public readonly List<(PhysicsObject obj, Vector2 p, float t, Ray ray)> Path;
 		private List<PhysicsObject> Mirrors;
 		private List<PhysicsObject> Prisms;
-		private int MaxBounces;
 
 		public Beam(Ray ray, List<PhysicsObject> mirrors, List<PhysicsObject> prisms, int maxBounces)
 		{

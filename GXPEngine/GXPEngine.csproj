@@ -46,6 +46,7 @@
     <Compile Include="Mirror.cs" />
     <Compile Include="Physics\CircleCollider.cs" />
     <Compile Include="Physics\CollisionInfo.cs" />
+    <Compile Include="Physics\PhysicsManager.cs" />
     <Compile Include="Primitives\Circle.cs" />
     <Compile Include="Control\Scene.cs" />
     <Compile Include="Control\SceneManager.cs" />

@@ -32,7 +32,7 @@ namespace GXPEngine.Scenes
 			CircleA = new EDCircle(new Vector2(width / 2f, height / 2f), 100);
 			BoxB = new EDBox(new Vector2(), size, 0);
 			BoxC = new EDBox(BoxB.Position, size, 0);
-			BoxC.body.IsStatic = false;
+			BoxC.body.Behavior = ACollider.ColliderType.Rigid;
 
 			//AddChild(BoxA);
 			AddChild(CircleA);

@@ -7,6 +7,7 @@ namespace GXPEngine.Physics
 	/// Ghost colliders can move but don't collide
 	/// Static colliders are not affected by physics but do affect other colliders
 	/// </summary>
+	
 	internal abstract class ACollider
 	{
 		public GameObject Owner;
@@ -36,21 +37,44 @@ namespace GXPEngine.Physics
 		public bool IsColliding;
 		public CollisionInfo LastCollision;
 
-		public bool IsStatic;
-		public bool IsGhost;
+		public ColliderType Behavior
+		{
+			get => _behavior;
+			set
+			{
+				BehaviorChanged?.Invoke(this, new BehaviorChangeEvent(_behavior, value));
+				_behavior = value;
+			}
+		}
+		private ColliderType _behavior;
+		public EventHandler<BehaviorChangeEvent> BehaviorChanged;
+
+		public struct BehaviorChangeEvent
+		{
+			public ColliderType OldBehavior;
+			public ColliderType NewBehavior;
+
+			public BehaviorChangeEvent(ColliderType oldB, ColliderType newB) 
+			{
+				OldBehavior = oldB; NewBehavior = newB; 
+			}
+		}
 
 		public enum ColliderType
 		{
 			Rigid,
-			Ghost,
+			Trigger,
 			Static,
 		}
+
+		// Properties for triggers
+		public delegate void TriggerAction(ACollider trigger, ACollider other);
+		public TriggerAction TriggerMethod;
 
 		public ACollider(PhysicsObject owner)
 		{
 			Owner = owner;
-			IsColliding = false;
-			IsStatic = true;
+			Behavior = ColliderType.Static;
 		}
 
 		public abstract bool Overlapping(ACollider other);
@@ -60,7 +84,7 @@ namespace GXPEngine.Physics
 
 		public void Step(ICollection<ACollider> colliderList)
 		{
-			if (!IsStatic)
+			if (Behavior == ColliderType.Static)
 			{
 				Position += Velocity;
 
@@ -69,7 +93,7 @@ namespace GXPEngine.Physics
 
 				foreach (ACollider collider in colliderList)
 				{
-					if (collider == this || collider.IsGhost) continue;
+					if (collider == this || collider.Behavior == ColliderType.Trigger) continue;
 					if (Overlapping(collider))
 					{
 						CollisionInfo colInfo = LastCollision;
