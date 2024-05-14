@@ -6,25 +6,25 @@ using System.Diagnostics;
 
 namespace GXPEngine
 {
-	internal class Prism : Circle
+	internal class Prism : EDBox
 	{
 		private Stopwatch stopwatch;
 		private Sprite sprite;
 		private float TimeToLive = 1000;
 
-		public Prism(Vector2 position, Vector2 velocity) : base(position, 50)
+		public Prism(Vector2 position, Vector2 velocity) : base(position, new Vector2(75, 75), 0)
 		{
 			body.Velocity = velocity;
 			body.IsStatic = false;
 
-			sprite = new Sprite("circle.png");
+			//sprite = new Sprite("circle.png");
 
-			sprite.SetOrigin(sprite.width / 2, sprite.height / 2);
-			AddChild(sprite);
+			//sprite.SetOrigin(sprite.width / 2, sprite.height / 2);
+			//AddChild(sprite);
 
 			float doubleR = 100;
-			sprite.scale = doubleR / sprite.width;
-			Console.WriteLine(sprite.width / doubleR);
+			//sprite.scale = doubleR / sprite.width;
+			//Console.WriteLine(sprite.width / doubleR);
 
 			stopwatch = new Stopwatch();
 			stopwatch.Start();
@@ -41,10 +41,6 @@ namespace GXPEngine
 				if (stopwatch.ElapsedMilliseconds > TimeToLive)
 				{
 					body.IsStatic = true;
-				}
-				else
-				{
-					body.Velocity += new Vector2(0, 0.5);
 				}
 			}
 		}

@@ -30,7 +30,7 @@ namespace GXPEngine.Scenes
 			ray = Ray.Horizontal;
 			ray.Origin = new Vector2(100, height / 2f);
 
-			BoxA = new EDBox(new Vector2(width / 2f, height / 2f), new Vector2(200, 200), 0);
+			BoxA = new EDBox(new Vector2(width / 2f, height / 2f), new Vector2(300, 200), 0);
 
 			AddChild(BoxA);
 			AddChild(debugLayer);

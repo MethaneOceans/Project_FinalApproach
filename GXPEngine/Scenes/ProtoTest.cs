@@ -7,38 +7,52 @@ namespace GXPEngine.Scenes
 {
 	internal class ProtoTest : Scene
 	{
-		private List<ACollider> colliders;
+		private List<PhysicsObject> objects;
+		private List<ACollider> bodies;
+
+		private Vector2 playerPosition;
 
 		public override void Initialize()
 		{
 			base.Initialize();
 
-			EDBox floor = new EDBox(new Vector2(width / 2f, height - 100), new Vector2(1200, 100), 0);
-			AddChild(floor);
+			playerPosition = new Vector2(100, height - height / 3);
 
-			colliders = new List<ACollider>()
+			objects = new List<PhysicsObject>()
 			{
-				floor.body,
+				new EDBox(new Vector2(width / 2f, height - 100), new Vector2(1200, 100), 0)
 			};
+			bodies = new List<ACollider>();
+
+
+			foreach (PhysicsObject obj in objects)
+			{
+				AddChild(obj);
+				bodies.Add(obj.body);
+			}
 		}
 
 		public void Update()
 		{
-			foreach(ACollider collider in colliders)
+			foreach(ACollider collider in bodies)
 			{
-				collider.Step(colliders);
+				collider.Step(bodies);
 			}
 
 			if (Input.GetMouseButtonDown(0))
 			{
-				Vector2 aimFrom = new Vector2(100, height - height / 3);
 				Vector2 aimAt = Input.mousePos;
-				Vector2 initVelocity = (aimAt - aimFrom) / 30;
+				Vector2 initVelocity = (aimAt - playerPosition) / 30;
 
-				Prism prism = new Prism(aimFrom, initVelocity, 5000);
+				Prism prism = new Prism(playerPosition, initVelocity, 5000);
 
 				AddChild(prism);
-				colliders.Add(prism.body);
+				bodies.Add(prism.body);
+			}
+			if (Input.GetMouseButtonDown(1))
+			{
+				Ray r = new Ray(playerPosition, (Input.mousePos - playerPosition));
+				Beam beam = new Beam(r, objects, new List<PhysicsObject>(), 5);
 			}
 		}
 	}

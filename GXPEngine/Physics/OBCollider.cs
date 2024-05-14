@@ -104,7 +104,7 @@ namespace GXPEngine.Physics
 				if (bestCol == null || col.Depth < bestCol.Depth) bestCol = col;
 				if (!overlaps) return false;
 			}
-
+			bestCol.Normal *= -1;
 			LastCollision = bestCol;
 			return true;
 		}
@@ -241,7 +241,10 @@ namespace GXPEngine.Physics
 		}
 		public override Vector2 NormalAt(Vector2 point)
 		{
-			point = (point - Position).RotatedDeg(-Angle - 45).Normalized();
+			point = (point - Position).RotatedDeg(-Angle);
+			point.x *= Size.y / 2f;
+			point.y *= Size.x / 2f;
+			point = point.RotatedDeg(-45);
 			bool right = point.x > 0;
 			bool top = point.y > 0;
 

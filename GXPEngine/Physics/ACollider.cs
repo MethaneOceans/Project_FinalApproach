@@ -1,11 +1,16 @@
+using System;
 using System.Collections.Generic;
-using GXPEngine.Primitives;
 
 namespace GXPEngine.Physics
 {
+	/// <summary>
+	/// Ghost colliders can move but don't collide
+	/// Static colliders are not affected by physics but do affect other colliders
+	/// </summary>
 	internal abstract class ACollider
 	{
 		public GameObject Owner;
+
 		public Vector2 Position
 		{
 			get => _position;
@@ -30,7 +35,16 @@ namespace GXPEngine.Physics
 
 		public bool IsColliding;
 		public CollisionInfo LastCollision;
+
 		public bool IsStatic;
+		public bool IsGhost;
+
+		public enum ColliderType
+		{
+			Rigid,
+			Ghost,
+			Static,
+		}
 
 		public ACollider(PhysicsObject owner)
 		{
@@ -55,7 +69,7 @@ namespace GXPEngine.Physics
 
 				foreach (ACollider collider in colliderList)
 				{
-					if (collider == this) continue;
+					if (collider == this || collider.IsGhost) continue;
 					if (Overlapping(collider))
 					{
 						CollisionInfo colInfo = LastCollision;

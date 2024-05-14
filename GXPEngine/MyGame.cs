@@ -19,6 +19,8 @@ public class MyGame : Game {
 		sceneManager.AddScene("RayTest", new RayTest());
 		sceneManager.AddScene("CircleTest", new CircleTest());
 		sceneManager.AddScene("ProtoTest", new ProtoTest());
+		sceneManager.AddScene("LaserTest", new LaserTest());
+
 
 		// Show the fps
 		fpsCounter = new EasyDraw(200, 50);
@@ -45,6 +47,7 @@ public class MyGame : Game {
 		if (Input.GetKeyDown(Key.TWO)) sceneManager.SwitchScene("RayTest");
 		if (Input.GetKeyDown(Key.THREE)) sceneManager.SwitchScene("CircleTest");
 		if (Input.GetKeyDown(Key.FOUR)) sceneManager.SwitchScene("ProtoTest");
+		if (Input.GetKeyDown(Key.FIVE)) sceneManager.SwitchScene("LaserTest");
 	}
 	static void Main()
 	{
