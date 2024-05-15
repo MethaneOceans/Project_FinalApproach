@@ -11,12 +11,12 @@ namespace GXPEngine
 		protected PhysicsManager physics;
 
 		private Player player;
-		private List<Mirror> mirrors;
-		private List<Goal> goals;
-		private List<Block> blocks;
-		private List<Prism> prisms;
+		public List<Mirror> mirrors;
+		public List<Goal> goals;
+		public List<Block> blocks;
+		public List<Prism> prisms;
 
-		private List<PathSprite> lasers;
+		private Beam laser;
 
 		protected int ThreeStarScore;
 		protected int TwoStarScore;
@@ -32,7 +32,9 @@ namespace GXPEngine
 			blocks = new List<Block>();
 			prisms = new List<Prism>();
 
-			lasers = new List<PathSprite>();
+			int maxBounces = 10;
+			int maxDepth = 5;
+			laser = new Beam(maxBounces, maxDepth, this);
 
 			foreach (ALevelObject obj in objectList)
 			{
@@ -72,7 +74,6 @@ namespace GXPEngine
 			currentGoalsHit = 0;
 			physics.Step();
 
-			lasers.Clear();
 
 			// Fire laser
 			if (Input.GetMouseButton(0))
@@ -80,16 +81,10 @@ namespace GXPEngine
 				Vector2 from = player.Position;
 				Vector2 to = Input.mousePos;
 				Ray laserStart = new Ray(from, to);
-				Beam beam = new Beam(laserStart, mirrors, blocks, prisms, 10);
 
-				int i = 0;
-				while (i < 10)
-				{
-					bool hitPrism = false;
-				}
-
-				
+				laser.RecalcPath(laserStart);
 			}
+			else laser.visible = false;
 			// Fire prism
 			if (Input.GetMouseButtonDown(1))
 			{

@@ -2,63 +2,45 @@
 using GXPEngine.Physics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GXPEngine
 {
-	internal class Beam
+	internal class Beam : GameObject
 	{
-		Ray Ray;
-		public readonly List<(PhysicsObject obj, Vector2 p, float t, Ray ray)> Path;
-		private List<PhysicsObject> objects;
+		private Ray _ray;
+		private List<ALevelObject> objects;
 
-		
-		public Beam(Ray ray, List<Mirror> mirrors, List<Block> blocks, List<Prism> prisms, int maxBounces)
+		public int MaxBounces;
+		public int MaxDepth;
+
+		private readonly Level _level;
+
+		private LaserSprite[] laserSprites;
+
+		public Beam(int maxBounces, int maxDepth, Level level)
 		{
-			Ray = ray;
-			Path = new List<(PhysicsObject obj, Vector2 p, float t, Ray ray)>();
-			
-			objects = new List<PhysicsObject>();
-			mirrors.ForEach(a => objects.Add(a));
-			blocks.ForEach(a => objects.Add(a));
-			prisms.ForEach(a => objects.Add(a));
+			MaxBounces = maxBounces;
+			MaxDepth = maxDepth;
+			_level = level;
 
-			int bounces = 0;
-			Ray currentRay = Ray;
-			while (bounces <= maxBounces)
+			laserSprites = new LaserSprite[maxDepth * maxBounces];
+			for (int i = 0; i < laserSprites.Length; i++)
 			{
-				bounces++;
-
-				(PhysicsObject obj, float t) = Cast(currentRay);
-
-				if (t == float.NegativeInfinity || t == -1 || t > 2000)
+				laserSprites[i] = new LaserSprite()
 				{
-					// Ray never hits
-					t = 2000;
-					bounces = maxBounces + 1;
-				}
-
-				Vector2 point = currentRay.At(t);
-
-				Path.Add((obj, point, t, currentRay));
-
-				if (obj is Prism || obj is Block || t == 2000) return;
-
-
-				Vector2 normal = obj.body.NormalAt(point);
-
-				Vector2 q = Vector2.Dot(currentRay.Direction, normal) * normal;
-				Vector2 reflected = currentRay.Direction - (2 * q);
-
-				currentRay = new Ray(point + 1.1f * normal, reflected);
+					visible = false,
+				};
+				AddChild(laserSprites[i]);
 			}
 		}
 
-		private (PhysicsObject obj, float t) Cast(Ray ray)
+		private (ALevelObject obj, float t) Cast(Ray ray)
 		{
 			float closest_t = float.PositiveInfinity;
-			PhysicsObject closest_obj = null;
+			ALevelObject closest_obj = null;
 
-			foreach (PhysicsObject obj in objects)
+			foreach (ALevelObject obj in objects)
 			{
 				float t = obj.body.RayCast(ray);
 				if (t < closest_t && t >= 0)
@@ -71,22 +53,79 @@ namespace GXPEngine
 			return (closest_obj, closest_t);
 		}
 
-		public string StringPath()
+		public void RecalcPath(Ray ray)
 		{
-			string result = string.Empty;
+			_ray = ray;
 
-			for (int i = 0; i < Path.Count; i++)
+			List<(Vector2 start, float angle, float t)> path = CalcPath(ray, 0, new List<Prism>());
+
+			for (int i = 0; i < laserSprites.Length; i++)
 			{
-				(PhysicsObject obj, Vector2 point, float t, Ray ray) = Path[i];
-				result += $"Bounce #{i}\n";
-				result += $"Ray cast:\n";
-				result += $"\tOrigin: {ray.Origin}\n";
-				result += $"\tDirection: {ray.Direction}\n";
-				result += $"Hit after t: {t} \n";
-				result += $"Hit at {point}\n\n";
+				if (i < path.Count)
+				{
+					var a = path[i];
+
+					laserSprites[i].visible = true;
+					laserSprites[i].Position = a.start;
+					laserSprites[i].Rotation = a.angle;
+					laserSprites[i].width = (int)a.t;
+				}
+				else if (laserSprites[i].visible) laserSprites[i].visible = false;
+				else break;
+			}
+		}
+		private List<(Vector2 start, float angle, float t)> CalcPath(Ray ray, int depth, List<Prism> prismsHit)
+		{
+			int bounces = 0;
+			List<(Vector2 start, float angle, float t)> path = new List<(Vector2 start, float angle, float t)>();
+
+			Ray currentRay = ray;
+
+			while (bounces < MaxBounces)
+			{
+				bounces++;
+
+				// Get new raycast results
+				var (obj, t) = Cast(currentRay);
+				// Add results to path list
+				path.Add((currentRay.Origin, currentRay.Direction.Degrees, t));
+
+				// Check what object the ray intersects with and continue as appropriate
+				if (obj is Prism prism && !prismsHit.Contains(prism))
+				{
+					if (!prismsHit.Contains(prism))
+					{
+						prismsHit.Add(prism);
+
+						// Send out a new ray for each normal of the prism body
+						foreach (var normal in (prism.body as OBCollider).Normals)
+						{
+							OBCollider pBody = (prism.body as OBCollider);
+
+							Vector2 subOrigin = pBody.Position + normal * (pBody.Size.x / 2);
+							Ray subRay = new Ray(subOrigin, normal);
+
+							List<(Vector2 start, float angle, float t)> subPath = CalcPath(subRay, depth + 1, prismsHit);
+							subPath.ForEach(a => path.Add(a));
+						}
+					}
+
+					break;
+				}
+				else if (obj is Mirror mirror)
+				{
+					Vector2 point = ray.At(t);
+					Vector2 normal = mirror.body.NormalAt(point);
+
+					Vector2 q = Vector2.Dot(ray.Direction, normal) * normal;
+					Vector2 newDirection = currentRay.Direction - 2 * q;
+					Vector2 newPoint = point + 0.001f * normal;
+					currentRay = new Ray(newPoint, newDirection);
+				}
+				else break;
 			}
 
-			return result;
+			return path;
 		}
 	}
 }
