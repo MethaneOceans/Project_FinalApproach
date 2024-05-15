@@ -16,6 +16,8 @@ namespace GXPEngine
 		public List<Block> blocks;
 		public List<Prism> prisms;
 
+		public List<ALevelObject> allObjects;
+
 		private Beam laser;
 
 		protected int ThreeStarScore;
@@ -27,6 +29,9 @@ namespace GXPEngine
 
 		protected void Initialize(List<ALevelObject> objectList)
 		{
+			physics = new PhysicsManager();
+			allObjects = new List<ALevelObject>();
+
 			mirrors = new List<Mirror>();
 			goals = new List<Goal>();
 			blocks = new List<Block>();
@@ -48,6 +53,7 @@ namespace GXPEngine
 				else
 				{
 					physics.Add(obj.body);
+					allObjects.Add(obj);
 
 					if (obj is Mirror mirror)
 					{
@@ -67,6 +73,7 @@ namespace GXPEngine
 					}
 				}
 			}
+			AddChild(laser);
 		}
 
 		public virtual void Update()
@@ -80,7 +87,7 @@ namespace GXPEngine
 			{
 				Vector2 from = player.Position;
 				Vector2 to = Input.mousePos;
-				Ray laserStart = new Ray(from, to);
+				Ray laserStart = new Ray(from, to - from);
 
 				laser.RecalcPath(laserStart);
 			}
@@ -97,6 +104,7 @@ namespace GXPEngine
 
 		private void GoalHit(object sender, EventArgs args)
 		{
+			Console.WriteLine("Hit Goal!!!");
 			currentGoalsHit++;
 		}
 

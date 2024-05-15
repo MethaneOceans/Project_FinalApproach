@@ -45,7 +45,7 @@
     <Compile Include="GameElements\Block.cs" />
     <Compile Include="GameElements\Goal.cs" />
     <Compile Include="GameElements\ALevelObject.cs" />
-    <Compile Include="GameElements\LaserObjects\PathSprite.cs" />
+    <Compile Include="GameElements\LaserObjects\LaserSprite.cs" />
     <Compile Include="GameElements\Player.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="MathUtils.cs" />
@@ -106,11 +106,9 @@
     <Compile Include="Physics\Ray.cs" />
     <Compile Include="Physics\PhysicsObject.cs" />
     <Compile Include="GameElements\Prism.cs" />
-    <Compile Include="Scenes\LaserSpriteTest.cs" />
     <Compile Include="Scenes\TestLevel.cs" />
     <Compile Include="Scenes\Unused\CircleTest.cs" />
     <Compile Include="Scenes\Unused\CollisionTest.cs" />
-    <Compile Include="Scenes\LaserTest.cs" />
     <Compile Include="Scenes\Unused\ProtoTest.cs" />
     <Compile Include="Scenes\Unused\RayTest.cs" />
     <Compile Include="Scenes\TriggerTest.cs" />

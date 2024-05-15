@@ -12,10 +12,5 @@ namespace GXPEngine
 
 			body = new OBCollider(position, new Vector2(sprite.width, sprite.height), angle, this);
 		}
-
-		public override void LaserHit()
-		{
-			// Do nothing
-		}
 	}
 }

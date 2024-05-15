@@ -40,7 +40,7 @@ namespace GXPEngine
 			float closest_t = float.PositiveInfinity;
 			ALevelObject closest_obj = null;
 
-			foreach (ALevelObject obj in objects)
+			foreach (ALevelObject obj in _level.allObjects)
 			{
 				float t = obj.body.RayCast(ray);
 				if (t < closest_t && t >= 0)
@@ -55,6 +55,7 @@ namespace GXPEngine
 
 		public void RecalcPath(Ray ray)
 		{
+			Console.WriteLine("Recalculating path");
 			_ray = ray;
 
 			List<(Vector2 start, float angle, float t)> path = CalcPath(ray, 0, new List<Prism>());
@@ -63,15 +64,20 @@ namespace GXPEngine
 			{
 				if (i < path.Count)
 				{
-					var a = path[i];
+					(Vector2 start, float angle, float t) = path[i];
+
+					Console.WriteLine("Bounce #{0}", i);
+					Console.WriteLine("Starts at: {0}", start);
+					Console.WriteLine("Angle is: {0}", angle);
+					Console.WriteLine("Travel distance: {0}", t);
 
 					laserSprites[i].visible = true;
-					laserSprites[i].Position = a.start;
-					laserSprites[i].Rotation = a.angle;
-					laserSprites[i].width = (int)a.t;
+					laserSprites[i].Position = start;
+					laserSprites[i].Rotation = angle;
+					laserSprites[i].width = (int)t;
 				}
 				else if (laserSprites[i].visible) laserSprites[i].visible = false;
-				else break;
+				//else break;
 			}
 		}
 		private List<(Vector2 start, float angle, float t)> CalcPath(Ray ray, int depth, List<Prism> prismsHit)
@@ -89,11 +95,12 @@ namespace GXPEngine
 				var (obj, t) = Cast(currentRay);
 				// Add results to path list
 				path.Add((currentRay.Origin, currentRay.Direction.Degrees, t));
+				obj?.HitByLaser();
 
 				// Check what object the ray intersects with and continue as appropriate
 				if (obj is Prism prism && !prismsHit.Contains(prism))
 				{
-					if (!prismsHit.Contains(prism))
+					if (!prismsHit.Contains(prism) && depth < MaxDepth)
 					{
 						prismsHit.Add(prism);
 
