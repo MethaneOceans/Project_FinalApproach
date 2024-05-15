@@ -41,8 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameElements\Beam.cs" />
+    <Compile Include="GameElements\LaserObjects\Beam.cs" />
+    <Compile Include="GameElements\Block.cs" />
     <Compile Include="GameElements\Goal.cs" />
+    <Compile Include="GameElements\ALevelObject.cs" />
+    <Compile Include="GameElements\LaserObjects\LaserSprite.cs" />
+    <Compile Include="GameElements\Player.cs" />
+    <Compile Include="Level.cs" />
     <Compile Include="MathUtils.cs" />
     <Compile Include="GameElements\Mirror.cs" />
     <Compile Include="Physics\CircleCollider.cs" />
@@ -104,8 +109,7 @@
     <Compile Include="Scenes\TestLevel.cs" />
     <Compile Include="Scenes\Unused\CircleTest.cs" />
     <Compile Include="Scenes\Unused\CollisionTest.cs" />
-    <Compile Include="Scenes\LaserTest.cs" />
-    <Compile Include="Scenes\ProtoTest.cs" />
+    <Compile Include="Scenes\Unused\ProtoTest.cs" />
     <Compile Include="Scenes\Unused\RayTest.cs" />
     <Compile Include="Scenes\TriggerTest.cs" />
   </ItemGroup>
@@ -138,6 +142,33 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="lib\soloud_x64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Textures\barry.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Textures\checkers.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Textures\circle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Textures\colors.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Textures\laser.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Textures\laser_full.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Textures\mirror.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Textures\square.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Textures\triangle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
