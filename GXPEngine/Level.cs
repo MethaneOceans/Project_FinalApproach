@@ -11,10 +11,6 @@ namespace GXPEngine
 		protected PhysicsManager physics;
 
 		private Player player;
-		public List<Mirror> mirrors;
-		public List<Goal> goals;
-		public List<Block> blocks;
-		public List<Prism> prisms;
 
 		public List<ALevelObject> allObjects;
 
@@ -31,11 +27,6 @@ namespace GXPEngine
 		{
 			physics = new PhysicsManager();
 			allObjects = new List<ALevelObject>();
-
-			mirrors = new List<Mirror>();
-			goals = new List<Goal>();
-			blocks = new List<Block>();
-			prisms = new List<Prism>();
 
 			int maxBounces = 10;
 			int maxDepth = 5;
@@ -55,21 +46,9 @@ namespace GXPEngine
 					physics.Add(obj.body);
 					allObjects.Add(obj);
 
-					if (obj is Mirror mirror)
+					if (obj is Goal goal)
 					{
-						// Add mirror
-						mirrors.Add(mirror);
-					}
-					else if (obj is Goal goal)
-					{
-						// Add goal
-						goals.Add(goal);
 						goal.OnLaserHit += GoalHit;
-					}
-					else if (obj is Block block)
-					{
-						// Add block
-						blocks.Add(block);
 					}
 				}
 			}
@@ -90,6 +69,8 @@ namespace GXPEngine
 				Ray laserStart = new Ray(from, to - from);
 
 				laser.RecalcPath(laserStart);
+
+				laser.visible = true;
 			}
 			else laser.visible = false;
 			// Fire prism

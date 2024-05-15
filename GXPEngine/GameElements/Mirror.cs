@@ -7,10 +7,10 @@ namespace GXPEngine
 	{
 		public Mirror(Vector2 position, float angle) : base("mirror.png")
 		{
+			body = new OBCollider(position, new Vector2(sprite.width, sprite.height), angle, this);
+
 			Position = position;
 			Rotation = angle;
-
-			body = new OBCollider(position, new Vector2(sprite.width, sprite.height), angle, this);
 		}
 	}
 }

@@ -27,11 +27,9 @@ namespace GXPEngine
 			laserSprites = new LaserSprite[maxDepth * maxBounces];
 			for (int i = 0; i < laserSprites.Length; i++)
 			{
-				laserSprites[i] = new LaserSprite()
-				{
-					visible = false,
-				};
+				laserSprites[i] = new LaserSprite();
 				AddChild(laserSprites[i]);
+				laserSprites[i].visible = false;
 			}
 		}
 
@@ -66,15 +64,12 @@ namespace GXPEngine
 				{
 					(Vector2 start, float angle, float t) = path[i];
 
-					Console.WriteLine("Bounce #{0}", i);
-					Console.WriteLine("Starts at: {0}", start);
-					Console.WriteLine("Angle is: {0}", angle);
-					Console.WriteLine("Travel distance: {0}", t);
-
 					laserSprites[i].visible = true;
 					laserSprites[i].Position = start;
 					laserSprites[i].Rotation = angle;
-					laserSprites[i].width = (int)t;
+
+					if (t > 0 && t < 2000) laserSprites[i].width = (int)t;
+					else laserSprites[i].width = 2000;
 				}
 				else if (laserSprites[i].visible) laserSprites[i].visible = false;
 				//else break;

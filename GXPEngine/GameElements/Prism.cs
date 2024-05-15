@@ -11,7 +11,7 @@ namespace GXPEngine
 		//private Sprite sprite;
 		private readonly float TimeToLive = 1000;
 
-		public Prism(Vector2 position, Vector2 velocity) : base("circle")
+		public Prism(Vector2 position, Vector2 velocity) : base("square.png")
 		{
 			body = new OBCollider(position, new Vector2(sprite.width, sprite.height), 0, this)
 			{

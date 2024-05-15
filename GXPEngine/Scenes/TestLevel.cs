@@ -18,6 +18,12 @@ namespace GXPEngine.Scenes
 				new Player(new Vector2(100, height - height / 3)),
 
 				//new Block(new Vector2(width / 2, height - 200), new Vector2(1200, 200), 0),
+				new Mirror(new Vector2(width / 2, 100), 90),
+
+				new Prism(new Vector2(width / 2, height / 2), new Vector2(), 0)
+				{
+					Rotation = 15
+				},
 
 				new Goal(new Vector2(width - 100, height - height / 3)),
 			};
