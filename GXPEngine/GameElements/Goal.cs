@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GXPEngine.GameElements
 {
-	internal class Goal : Box
+	internal class Goal //: Box
 	{
 		private Sprite _sprite;
 

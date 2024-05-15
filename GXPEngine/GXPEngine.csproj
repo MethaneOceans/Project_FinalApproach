@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="GameElements\Beam.cs" />
     <Compile Include="GameElements\Goal.cs" />
+    <Compile Include="GameElements\PathSprite.cs" />
     <Compile Include="MathUtils.cs" />
     <Compile Include="GameElements\Mirror.cs" />
     <Compile Include="Physics\CircleCollider.cs" />
@@ -101,11 +102,12 @@
     <Compile Include="Physics\Ray.cs" />
     <Compile Include="Physics\PhysicsObject.cs" />
     <Compile Include="GameElements\Prism.cs" />
+    <Compile Include="Scenes\LaserSpriteTest.cs" />
     <Compile Include="Scenes\TestLevel.cs" />
     <Compile Include="Scenes\Unused\CircleTest.cs" />
     <Compile Include="Scenes\Unused\CollisionTest.cs" />
     <Compile Include="Scenes\LaserTest.cs" />
-    <Compile Include="Scenes\ProtoTest.cs" />
+    <Compile Include="Scenes\Unused\ProtoTest.cs" />
     <Compile Include="Scenes\Unused\RayTest.cs" />
     <Compile Include="Scenes\TriggerTest.cs" />
   </ItemGroup>

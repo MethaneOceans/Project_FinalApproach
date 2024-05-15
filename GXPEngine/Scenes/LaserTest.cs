@@ -1,4 +1,5 @@
 ﻿using GXPEngine.Control;
+using GXPEngine.GameElements;
 using GXPEngine.Physics;
 using GXPEngine.Primitives;
 using System;
@@ -11,6 +12,8 @@ namespace GXPEngine.Scenes
 		List<PhysicsObject> boxes;
 		EasyDraw LaserDebug;
 		Ray InitialRay;
+
+		PathSprite laserBeam;
 
 		public override void Initialize()
 		{
@@ -26,6 +29,9 @@ namespace GXPEngine.Scenes
 
 			foreach (EDBox box in boxes) AddChild(box);
 			AddChild(LaserDebug);
+
+			laserBeam = new PathSprite(5);
+			AddChild(laserBeam);
 		}
 
 		public void Update()
@@ -45,12 +51,14 @@ namespace GXPEngine.Scenes
 			LaserDebug.ClearTransparent();
 
 			Vector2 a = InitialRay.Origin;
-			foreach (var v in beam.Path)
-			{
-				Vector2 b = v.p;
-				LaserDebug.Line(a.x, a.y, b.x, b.y);
-				a = b;
-			}
+			//foreach (var v in beam.Path)
+			//{
+			//	Vector2 b = v.p;
+			//	LaserDebug.Line(a.x, a.y, b.x, b.y);
+			//	a = b;
+			//}
+
+			laserBeam.SetPath(beam.Path);
 		}
 	}
 }

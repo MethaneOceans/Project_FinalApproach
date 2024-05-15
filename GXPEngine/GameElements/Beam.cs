@@ -24,11 +24,6 @@ namespace GXPEngine
 			{
 				bounces++;
 
-				if (bounces > 2)
-				{
-
-				}
-
 				(PhysicsObject obj, float t) = Cast(currentRay);
 
 				if (t == float.NegativeInfinity || t == -1 || t > 2000)
