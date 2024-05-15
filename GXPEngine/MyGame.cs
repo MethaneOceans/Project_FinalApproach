@@ -15,15 +15,13 @@ public class MyGame : Game {
 	public MyGame() : base(1600, 900, pFullScreen: false, pPixelArt: false)
 	{
 		sceneManager = new SceneManager(this);
-		sceneManager.AddScene("ProtoTest", new ProtoTest());
-		sceneManager.AddScene("LaserTest", new LaserTest());
-		sceneManager.AddScene("TriggerTest", new TriggerTest());
+		sceneManager.AddScene("Level0", new TestLevel());
 
 		// Show the fps
 		fpsCounter = new EasyDraw(200, 50);
 		fpsCounter.TextAlign(CenterMode.Min, CenterMode.Min);
 		AddChild(fpsCounter);
-		sceneManager.SwitchScene("ProtoTest");
+		sceneManager.SwitchScene("Level0");
 
 		Console.WriteLine("MyGame initialized");
 	}
@@ -40,9 +38,7 @@ public class MyGame : Game {
 	{
 		if (Input.GetKeyDown(Key.R)) sceneManager.Reload();
 
-		if (Input.GetKeyDown(Key.ONE)) sceneManager.SwitchScene("ProtoTest");
-		if (Input.GetKeyDown(Key.TWO)) sceneManager.SwitchScene("LaserTest");
-		if (Input.GetKeyDown(Key.THREE)) sceneManager.SwitchScene("TriggerTest");
+		if (Input.GetKeyDown(Key.ONE)) sceneManager.SwitchScene("Level0");
 	}
 	static void Main()
 	{

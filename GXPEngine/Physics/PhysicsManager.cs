@@ -79,6 +79,8 @@ namespace GXPEngine.Physics
 				Step_Triggers(obj);
 
 				// Copied from ACollider
+				obj.Angle += 3;
+				obj.Velocity += new Vector2(0, 0.2);
 				obj.Position += obj.Velocity;
 
 				bool collided = false;
@@ -106,6 +108,7 @@ namespace GXPEngine.Physics
 				}
 
 				obj.Owner.Position = obj.Position;
+				obj.Owner.Rotation = obj.Angle;
 			}
 		}
 		private void Step_Triggers(ACollider obj)
@@ -120,7 +123,7 @@ namespace GXPEngine.Physics
 			}
 		}
 
-		private void BehaviorChangeHandler(object sender, ACollider.BehaviorChangeEvent args)
+		private void BehaviorChangeHandler(object sender, BehaviorChangeEvent args)
 		{
 			ColliderType oldB = args.OldBehavior;
 			ColliderType newB = args.NewBehavior;

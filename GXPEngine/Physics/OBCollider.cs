@@ -228,7 +228,7 @@ namespace GXPEngine.Physics
 			tB = (Size.y / 2f - rOrigin.y) / rDirection.y;
 			float tNearVert = Min(tA, tB);
 			float tFarVert = Max(tA, tB);
-			if (tFarVert < 0) return float.NegativeInfinity;
+			if (tFarVert < 0) return -1;
 
 			float min = Max(tNearHori, tNearVert);
 			float max = Min(tFarHori, tFarVert);
