@@ -79,6 +79,7 @@ namespace GXPEngine.Physics
 				Step_Triggers(obj);
 
 				// Copied from ACollider
+				obj.Velocity += new Vector2(0, 0.2);
 				obj.Position += obj.Velocity;
 
 				bool collided = false;

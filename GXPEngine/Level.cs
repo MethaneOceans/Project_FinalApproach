@@ -60,7 +60,6 @@ namespace GXPEngine
 			currentGoalsHit = 0;
 			physics.Step();
 
-
 			// Fire laser
 			if (Input.GetMouseButton(0))
 			{
@@ -79,7 +78,11 @@ namespace GXPEngine
 				Vector2 from = player.Position;
 				Vector2 to = Input.mousePos;
 
-
+				Vector2 velocity = (to - from) / 30;
+				Prism newPrism = new Prism(player.Position, velocity, 2000);
+				allObjects.Add(newPrism);
+				physics.Add(newPrism.body);
+				AddChild(newPrism);
 			}
 		}
 

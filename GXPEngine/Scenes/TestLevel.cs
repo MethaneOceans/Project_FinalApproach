@@ -22,7 +22,7 @@ namespace GXPEngine.Scenes
 
 				new Prism(new Vector2(width / 2, height / 2), new Vector2(), 0)
 				{
-					Rotation = 15
+					Rotation = 15,
 				},
 
 				new Goal(new Vector2(width - 100, height - height / 3)),

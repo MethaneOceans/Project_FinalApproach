@@ -8,7 +8,6 @@ namespace GXPEngine
 	internal class Prism : ALevelObject
 	{
 		private readonly Stopwatch stopwatch;
-		//private Sprite sprite;
 		private readonly float TimeToLive = 1000;
 
 		public Prism(Vector2 position, Vector2 velocity) : base("square.png")
@@ -33,9 +32,20 @@ namespace GXPEngine
 			stopwatch = new Stopwatch();
 			stopwatch.Start();
 		}
-		public Prism(Vector2 position, Vector2 velocity, float timeToLive) : this(position, velocity)
+		public Prism(Vector2 position, Vector2 velocity, float timeToLive) : base("square.png")
 		{
+			body = new OBCollider(position, new Vector2(sprite.width, sprite.height), 0, this)
+			{
+				Velocity = velocity,
+			};
+
+			body.Velocity = velocity;
+			body.Behavior = ACollider.ColliderType.Rigid;
+
 			TimeToLive = timeToLive;
+
+			stopwatch = new Stopwatch();
+			stopwatch.Start();
 		}
 
 		public void Update()
