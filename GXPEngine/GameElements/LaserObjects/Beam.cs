@@ -1,4 +1,5 @@
-﻿using GXPEngine.Physics;
+﻿using GXPEngine.GameElements;
+using GXPEngine.Physics;
 using System;
 using System.Collections.Generic;
 
@@ -8,15 +9,18 @@ namespace GXPEngine
 	{
 		Ray Ray;
 		public readonly List<(PhysicsObject obj, Vector2 p, float t, Ray ray)> Path;
-		private List<PhysicsObject> Mirrors;
-		private List<PhysicsObject> Prisms;
+		private List<PhysicsObject> objects;
 
-		public Beam(Ray ray, List<PhysicsObject> mirrors, List<PhysicsObject> prisms, int maxBounces)
+		
+		public Beam(Ray ray, List<Mirror> mirrors, List<Block> blocks, List<Prism> prisms, int maxBounces)
 		{
 			Ray = ray;
 			Path = new List<(PhysicsObject obj, Vector2 p, float t, Ray ray)>();
-			Mirrors = mirrors;
-			Prisms = prisms;
+			
+			objects = new List<PhysicsObject>();
+			mirrors.ForEach(a => objects.Add(a));
+			blocks.ForEach(a => objects.Add(a));
+			prisms.ForEach(a => objects.Add(a));
 
 			int bounces = 0;
 			Ray currentRay = Ray;
@@ -37,7 +41,7 @@ namespace GXPEngine
 
 				Path.Add((obj, point, t, currentRay));
 
-				if (obj is Prism || t == 2000) return;
+				if (obj is Prism || obj is Block || t == 2000) return;
 
 
 				Vector2 normal = obj.body.NormalAt(point);
@@ -54,19 +58,10 @@ namespace GXPEngine
 			float closest_t = float.PositiveInfinity;
 			PhysicsObject closest_obj = null;
 
-			foreach (PhysicsObject obj in Mirrors)
+			foreach (PhysicsObject obj in objects)
 			{
 				float t = obj.body.RayCast(ray);
 				if (t < closest_t && t >= 0)
-				{
-					closest_t = t;
-					closest_obj = obj;
-				}
-			}
-			foreach (PhysicsObject obj in Prisms)
-			{
-				float t = obj.body.RayCast(ray);
-				if (t < closest_t)
 				{
 					closest_t = t;
 					closest_obj = obj;

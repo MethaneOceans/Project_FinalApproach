@@ -41,9 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameElements\Beam.cs" />
+    <Compile Include="GameElements\LaserObjects\Beam.cs" />
+    <Compile Include="GameElements\Block.cs" />
     <Compile Include="GameElements\Goal.cs" />
-    <Compile Include="GameElements\PathSprite.cs" />
+    <Compile Include="GameElements\ALevelObject.cs" />
+    <Compile Include="GameElements\LaserObjects\PathSprite.cs" />
+    <Compile Include="GameElements\Player.cs" />
+    <Compile Include="Level.cs" />
     <Compile Include="MathUtils.cs" />
     <Compile Include="GameElements\Mirror.cs" />
     <Compile Include="Physics\CircleCollider.cs" />
@@ -142,6 +146,10 @@
     <Content Include="lib\soloud_x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Textures\laser.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Textures\laser_full.png" />
   </ItemGroup>
   <ItemGroup />
 </Project>

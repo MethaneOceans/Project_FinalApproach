@@ -7,9 +7,18 @@ using System.Threading.Tasks;
 
 namespace GXPEngine.GameElements
 {
-	internal class Goal //: Box
+	internal class Goal : ALevelObject
 	{
-		private Sprite _sprite;
+		public 
 
+		public Goal() : base("triangle.png")
+		{
+
+		}
+
+		public override void LaserHit()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

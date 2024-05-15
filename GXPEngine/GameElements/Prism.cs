@@ -1,19 +1,23 @@
+using GXPEngine.GameElements;
 using GXPEngine.Physics;
-using GXPEngine.Primitives;
-using System;
 using System.Diagnostics;
 
 
 namespace GXPEngine
 {
-	internal class Prism : EDBox
+	internal class Prism : ALevelObject
 	{
 		private readonly Stopwatch stopwatch;
 		//private Sprite sprite;
 		private readonly float TimeToLive = 1000;
 
-		public Prism(Vector2 position, Vector2 velocity) : base(position, new Vector2(75, 75), 0)
+		public Prism(Vector2 position, Vector2 velocity) : base("circle")
 		{
+			body = new OBCollider(position, new Vector2(sprite.width, sprite.height), 0, this)
+			{
+				Velocity = velocity,
+			};
+
 			body.Velocity = velocity;
 			body.Behavior = ACollider.ColliderType.Rigid;
 

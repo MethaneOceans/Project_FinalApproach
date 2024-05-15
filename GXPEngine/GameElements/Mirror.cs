@@ -1,28 +1,21 @@
-﻿namespace GXPEngine
+﻿using GXPEngine.GameElements;
+using GXPEngine.Physics;
+
+namespace GXPEngine
 {
-    public class Mirror : Sprite
-    {
-        public Mirror() : base("mirror.png")
-        {
-            x = 200;
-            y = 200;
-        }
+	internal class Mirror : ALevelObject
+	{
+		public Mirror(Vector2 position, float angle) : base("mirror.png")
+		{
+			Position = position;
+			Rotation = angle;
 
-        private void Update()
-        {
-            Rotate();
-        }
+			body = new OBCollider(position, new Vector2(sprite.width, sprite.height), angle, this);
+		}
 
-        private void Rotate()
-        {
-            if (Input.GetKey(Key.LEFT)) 
-            {
-                Rotation += 1;
-            }
-            if (Input.GetKey(Key.RIGHT))
-            {
-                Rotation -= 1;
-            }
-        }
-    }
+		public override void LaserHit()
+		{
+			// Do nothing
+		}
+	}
 }

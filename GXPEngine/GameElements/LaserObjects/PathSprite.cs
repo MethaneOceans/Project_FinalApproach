@@ -71,7 +71,7 @@ namespace GXPEngine.GameElements
 
 		private float _baseWidth;
 
-		public LaserSprite() : base("Laser.png")
+		public LaserSprite() : base("Textures/Laser.png")
 		{
 			SetOrigin(0, height / 2);
 
