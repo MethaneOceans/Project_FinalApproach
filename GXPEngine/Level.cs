@@ -123,7 +123,11 @@ namespace GXPEngine
 
 				if (launchPrism)
 				{
+<<<<<<< HEAD
 					LaunchPrismAction();
+=======
+					LaunchPrism();
+>>>>>>> 07ed228b352446b10d95a5c74f74497eb7828751
 					launchPrism = false;
 				}
 
@@ -181,7 +185,10 @@ namespace GXPEngine
 			{
 				launchCharging = false;
 				launchPrism = true;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 07ed228b352446b10d95a5c74f74497eb7828751
 			}, null, 1000, Timeout.Infinite);
 
 			Vector2 from = player.Position;
