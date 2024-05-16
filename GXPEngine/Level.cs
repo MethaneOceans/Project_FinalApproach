@@ -44,6 +44,12 @@ namespace GXPEngine
 			{
 				AddChild(obj);
 
+				obj.body.OnDestroy += (sender, args) =>
+				{
+					allObjects.Remove(obj);
+					obj.Destroy();
+				};
+
 				if (obj is Player playerObj)
 				{
 					// Assign player object

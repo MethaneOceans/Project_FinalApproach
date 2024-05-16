@@ -59,9 +59,30 @@ namespace GXPEngine.Physics
 				obj.BehaviorChanged -= BehaviorChangeHandler;
 			}
 		}
+		private void ForceRemove(ACollider obj)
+		{
+			bodies.Remove(obj);
+
+			if (obj.Behavior == ColliderType.Static) staticColliders.Remove(obj);
+			else if (obj.Behavior == ColliderType.Rigid) rigidColliders.Remove(obj);
+			else if (obj.Behavior == ColliderType.Trigger) triggerColliders.Remove(obj);
+
+			obj.BehaviorChanged -= BehaviorChangeHandler;
+			obj.Destroy();
+		}
 
 		public void Step()
 		{
+			for (int i = bodies.Count - 1; i >= 0; i--)
+			{
+				ACollider obj = bodies[i];
+
+				if (obj.ShouldRemove)
+				{
+					ForceRemove(obj);
+				}
+			}
+
 			ActiveStep = true;
 
 			foreach (ACollider obj in rigidColliders)

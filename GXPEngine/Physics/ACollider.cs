@@ -11,6 +11,7 @@ namespace GXPEngine.Physics
 	internal abstract class ACollider
 	{
 		public GameObject Owner;
+		public bool ShouldRemove = false;
 
 		public Vector2 Position
 		{
@@ -116,5 +117,7 @@ namespace GXPEngine.Physics
 			}
 		}
 		protected abstract void Invalidate();
+		public EventHandler OnDestroy;
+		public void Destroy() => OnDestroy?.Invoke(this, new EventArgs());
 	}
 }
