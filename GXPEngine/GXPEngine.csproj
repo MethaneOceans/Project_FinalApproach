@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NineSlice.cs" />
     <Compile Include="GameElements\LaserObjects\Beam.cs" />
     <Compile Include="GameElements\Block.cs" />
     <Compile Include="GameElements\Goal.cs" />

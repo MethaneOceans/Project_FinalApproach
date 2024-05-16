@@ -74,12 +74,12 @@ namespace GXPEngine.Physics
 
 		private void Step(ACollider obj)
 		{
+			if (obj.Owner is Prism) obj.Angle += 3;
 			if (obj.Behavior == ColliderType.Rigid)
 			{
 				Step_Triggers(obj);
 
 				// Copied from ACollider
-				obj.Angle += 3;
 				obj.Velocity += new Vector2(0, 0.2);
 				obj.Position += obj.Velocity;
 
