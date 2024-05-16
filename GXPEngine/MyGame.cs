@@ -16,6 +16,7 @@ public class MyGame : Game {
 	{
 		sceneManager = new SceneManager(this);
 		sceneManager.AddScene("Level0", new TestLevel());
+		sceneManager.AddScene("NineSlice", new NineSliceTest());
 
 		targetFps = int.MaxValue;
 
@@ -41,6 +42,8 @@ public class MyGame : Game {
 		if (Input.GetKeyDown(Key.R)) sceneManager.Reload();
 
 		if (Input.GetKeyDown(Key.ONE)) sceneManager.SwitchScene("Level0");
+		if (Input.GetKeyDown(Key.TWO)) sceneManager.SwitchScene("NineSlice");
+
 	}
 	static void Main()
 	{
