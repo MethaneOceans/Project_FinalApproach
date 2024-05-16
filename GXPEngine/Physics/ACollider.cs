@@ -36,7 +36,17 @@ namespace GXPEngine.Physics
 		private float _angle;
 
 		public bool IsColliding;
-		public CollisionInfo LastCollision;
+		public CollisionInfo LastCollision
+		{
+			get => _lastCol;
+			set
+			{
+				_lastCol = value;
+				OnCollision?.Invoke(this, (this, _lastCol.Other));
+			}
+		}
+		private CollisionInfo _lastCol;
+		public EventHandler<(ACollider col, ACollider other)> OnCollision;
 
 		public ColliderType Behavior
 		{

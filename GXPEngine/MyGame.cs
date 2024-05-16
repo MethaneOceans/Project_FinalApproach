@@ -12,6 +12,8 @@ public class MyGame : Game {
 	private readonly SceneManager sceneManager;
 	private readonly EasyDraw fpsCounter;
 
+	public float SoundVolume = 0.05f;
+
 	public MyGame() : base(1600, 900, pFullScreen: false, pPixelArt: false)
 	{
 		sceneManager = new SceneManager(this);
@@ -43,7 +45,6 @@ public class MyGame : Game {
 
 		if (Input.GetKeyDown(Key.ONE)) sceneManager.SwitchScene("Level0");
 		if (Input.GetKeyDown(Key.TWO)) sceneManager.SwitchScene("NineSlice");
-
 	}
 	static void Main()
 	{

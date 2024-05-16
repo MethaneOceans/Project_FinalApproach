@@ -61,7 +61,8 @@ namespace GXPEngine.Physics
 				CollisionInfo col = new CollisionInfo
 				{
 					Normal = -(Position - other.Position).Normalized(),
-					Depth = -distance
+					Depth = -distance,
+					Other = other
 				};
 				LastCollision = col;
 				return true;

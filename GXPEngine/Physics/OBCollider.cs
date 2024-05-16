@@ -105,6 +105,7 @@ namespace GXPEngine.Physics
 				if (!overlaps) return false;
 			}
 			bestCol.Normal *= -1;
+			bestCol.Other = other;
 			LastCollision = bestCol;
 			return true;
 		}

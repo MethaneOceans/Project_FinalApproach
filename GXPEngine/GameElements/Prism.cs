@@ -1,5 +1,6 @@
 using GXPEngine.GameElements;
 using GXPEngine.Physics;
+using System;
 using System.Diagnostics;
 
 
@@ -19,15 +20,6 @@ namespace GXPEngine
 
 			body.Velocity = velocity;
 			body.Behavior = ACollider.ColliderType.Rigid;
-
-			//sprite = new Sprite("circle.png");
-
-			//sprite.SetOrigin(sprite.width / 2, sprite.height / 2);
-			//AddChild(sprite);
-
-			//float doubleR = 100;
-			//sprite.scale = doubleR / sprite.width;
-			//Console.WriteLine(sprite.width / doubleR);
 
 			stopwatch = new Stopwatch();
 			stopwatch.Start();
@@ -55,8 +47,11 @@ namespace GXPEngine
 				if (stopwatch.ElapsedMilliseconds > TimeToLive)
 				{
 					body.Behavior = ACollider.ColliderType.Static;
+					OnPrismFreeze?.Invoke(this, new EventArgs());
 				}
 			}
 		}
+
+		public EventHandler OnPrismFreeze;
 	}
 }

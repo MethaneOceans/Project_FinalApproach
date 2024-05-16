@@ -126,18 +126,6 @@
     <None Include="lib\libsoloud-64.dylib">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Sounds\Ambient Loop.mp3.asd" />
-    <None Include="Sounds\Crystal Freeze.mp3.asd" />
-    <None Include="Sounds\Crystal Midair Whistle.mp3.asd" />
-    <None Include="Sounds\Game Over Music.mp3.asd" />
-    <None Include="Sounds\Laser Looping.mp3.asd" />
-    <None Include="Sounds\Laser Shoot.mp3.asd" />
-    <None Include="Sounds\Rock Bounce.mp3.asd" />
-    <None Include="Sounds\Spit Launch.mp3.asd" />
-    <None Include="Sounds\Spit Setup.mp3.asd" />
-    <None Include="Sounds\Victory Music.mp3.asd" />
-    <None Include="Sounds\Weavil Hit.mp3.asd" />
-    <None Include="Sounds\Weavil Laugh.mp3.asd" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="lib\COPYING.txt">
@@ -158,19 +146,45 @@
     <Content Include="lib\soloud_x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sounds\Ambient Loop.mp3" />
-    <Content Include="Sounds\Croak Quest Music.mp3" />
-    <Content Include="Sounds\Crystal Freeze.mp3" />
-    <Content Include="Sounds\Crystal Midair Whistle.mp3" />
-    <Content Include="Sounds\Game Over Music.mp3" />
-    <Content Include="Sounds\Laser Looping.mp3" />
-    <Content Include="Sounds\Laser Shoot.mp3" />
-    <Content Include="Sounds\Rock Bounce.mp3" />
-    <Content Include="Sounds\Spit Launch.mp3" />
-    <Content Include="Sounds\Spit Setup.mp3" />
-    <Content Include="Sounds\Victory Music.mp3" />
-    <Content Include="Sounds\Weavil Hit.mp3" />
-    <Content Include="Sounds\Weavil Laugh.mp3" />
+    <Content Include="Sounds\Ambient Loop.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\Croak Quest Music.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\Crystal Freeze.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\Crystal Midair Whistle.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\Game Over Music.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\Laser Looping.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\Laser Shoot.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\Rock Bounce.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\Spit Launch.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\Spit Setup.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\Victory Music.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\Weavil Hit.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\Weavil Laugh.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Textures\9Slice_Test.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
