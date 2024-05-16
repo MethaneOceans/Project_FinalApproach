@@ -6,7 +6,7 @@ namespace GXPEngine.GameElements
 {
 	internal class Player : ALevelObject
 	{
-		public Player(Vector2 position) : base("colors.png")
+		public Player(Vector2 position) : base("Textures/colors.png")
 		{
 			body = new OBCollider(position, new Vector2(sprite.width, sprite.height), 0, this);
 			Position = position;
