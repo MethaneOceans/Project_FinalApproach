@@ -45,6 +45,8 @@ namespace GXPEngine
 
 		private bool launchCharging;
 		private Timer launchTimer;
+		private bool launchPrism;
+
 		protected int prismsShot;
 		private int currentGoalsHit;
 		private int goalsCount;
@@ -119,6 +121,12 @@ namespace GXPEngine
 				currentGoalsHit = 0;
 				physics.Step();
 
+				if (launchPrism)
+				{
+					LaunchPrism();
+					launchPrism = false;
+				}
+
 				// Fire laser
 				if (Input.GetMouseButton(0))
 				{
@@ -172,6 +180,7 @@ namespace GXPEngine
 			launchTimer = new Timer((_) =>
 			{
 				launchCharging = false;
+				launchPrism = true;
 			}, null, 1000, Timeout.Infinite);
 		}
 		protected virtual void LaunchPrism()
