@@ -5,6 +5,31 @@ namespace GXPEngine
 {
 	internal class NineSlice : SpriteBatch
 	{
+		public readonly int Width;
+		public readonly int Height;
+
+		private Vector2 originInWorld = new Vector2();
+		private Vector2 origin = new Vector2();
+
+		public new float Rotation
+		{
+			get => base.Rotation;
+			set
+			{
+				base.Rotation = value;
+				UpdateCorner();
+			}
+		}
+		public new Vector2 Position
+		{
+			get => originInWorld;
+			set
+			{
+				originInWorld = value;
+				UpdateCorner();
+			}
+		}
+
 		public NineSlice(string filepath, int width, int height)
 		{
 			Bitmap texture = (Bitmap)Image.FromFile(filepath);
@@ -14,7 +39,8 @@ namespace GXPEngine
 			int cols = width / tileWidth;
 			int rows = height / tileHeight;
 
-			AnimationSprite[,] sprites = new AnimationSprite[cols, rows];
+			Width = cols * tileWidth;
+			Height = rows * tileHeight;
 
 			// Generate tiles
 			for (int j = 0; j < rows; j++)
@@ -43,6 +69,15 @@ namespace GXPEngine
 			}
 
 			Freeze();
+		}
+
+		public void SetOrigin(float x, float y)
+		{
+			origin = new Vector2(x, y);
+		}
+		private void UpdateCorner()
+		{
+			base.Position = (originInWorld - origin).RotateAroundDegrees(originInWorld, Rotation);
 		}
 	}
 }

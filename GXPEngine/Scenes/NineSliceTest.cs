@@ -12,11 +12,15 @@ namespace GXPEngine.Scenes
 
 			slice = new NineSlice("Textures/9Slice_Test.jpg", 1000, 600);
 			AddChild(slice);
+
+			slice.SetOrigin(slice.Width / 2f, slice.Height / 2f);
+			slice.Position = new Vector2(width / 2, height / 2);
 		}
 
 		public void Update()
 		{
-			slice.Rotation++;
+			if (Input.GetKey(Key.E)) slice.Rotation++;
+			if (Input.GetKey(Key.Q)) slice.Rotation--;
 		}
 	}
 }

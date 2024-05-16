@@ -8,15 +8,12 @@ namespace GXPEngine
 {
 	internal class Beam : GameObject
 	{
-		private Ray _ray;
-		private List<ALevelObject> objects;
-
 		public int MaxBounces;
 		public int MaxDepth;
 
 		private readonly Level _level;
 
-		private LaserSprite[] laserSprites;
+		private readonly LaserSprite[] laserSprites;
 
 		public Beam(int maxBounces, int maxDepth, Level level)
 		{
@@ -53,9 +50,6 @@ namespace GXPEngine
 
 		public void RecalcPath(Ray ray)
 		{
-			Console.WriteLine("Recalculating path");
-			_ray = ray;
-
 			List<(Vector2 start, float angle, float t)> path = CalcPath(ray, 0, new List<Prism>());
 
 			for (int i = 0; i < laserSprites.Length; i++)
@@ -72,7 +66,7 @@ namespace GXPEngine
 					else laserSprites[i].width = 2000;
 				}
 				else if (laserSprites[i].visible) laserSprites[i].visible = false;
-				//else break;
+				else break;
 			}
 		}
 		private List<(Vector2 start, float angle, float t)> CalcPath(Ray ray, int depth, List<Prism> prismsHit)
