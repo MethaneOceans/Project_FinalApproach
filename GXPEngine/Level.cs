@@ -12,7 +12,7 @@ namespace GXPEngine
 {
 	internal abstract class Level : Scene
 	{
-		private Dictionary<string, (Sound sound, SoundChannel channel)> _sounds = new Dictionary<string, (Sound sound, SoundChannel channel)>
+		private readonly Dictionary<string, (Sound sound, SoundChannel channel)> _sounds = new Dictionary<string, (Sound sound, SoundChannel channel)>
 		{
 			{ "ambient", (new Sound("Sounds/Ambient Loop.mp3", true, true), null) },
 			{ "victoryMusic", (new Sound("Sounds/Victory Music.mp3", false, true), null) },
@@ -44,7 +44,6 @@ namespace GXPEngine
 		private int starGoal;
 
 		private bool launchCharging;
-		private Timer launchTimer;
 		private bool launchPrism;
 
 		protected int prismsShot;
@@ -64,7 +63,6 @@ namespace GXPEngine
 			currentGoalsHit = 0;
 			goalsCount = 0;
 
-			launchTimer = null;
 			launchCharging = false;
 
 			int maxBounces = 10;
@@ -102,14 +100,7 @@ namespace GXPEngine
 			AddChild(laser);
 
 			// Configure sound
-			if (_sounds != null)
-			{
-				var keys = _sounds.Keys.ToArray();
-				for (int i = _sounds.Count - 1; i >= 0; i--)
-				{
-					StopSound(keys[i]);
-				}
-			}
+			
 			PlaySound("ambient", false);
 			PlaySound("ambientMusic");
 		}
@@ -123,11 +114,8 @@ namespace GXPEngine
 
 				if (launchPrism)
 				{
-<<<<<<< HEAD
 					LaunchPrismAction();
-=======
-					LaunchPrism();
->>>>>>> 07ed228b352446b10d95a5c74f74497eb7828751
+
 					launchPrism = false;
 				}
 
@@ -181,14 +169,10 @@ namespace GXPEngine
 		{
 			PlaySound("chargeLaunch");
 			launchCharging = true;
-			launchTimer = new Timer((_) =>
+			Timer launchTimer = new Timer((_) =>
 			{
 				launchCharging = false;
 				launchPrism = true;
-<<<<<<< HEAD
-
-=======
->>>>>>> 07ed228b352446b10d95a5c74f74497eb7828751
 			}, null, 1000, Timeout.Infinite);
 
 			Vector2 from = player.Position;
@@ -262,6 +246,20 @@ namespace GXPEngine
 			{
 				channel.Stop();
 				_sounds[soundID] = (sound, null);
+			}
+		}
+
+		public override void Unload()
+		{
+			base.Unload();
+
+			if (_sounds != null)
+			{
+				var keys = _sounds.Keys.ToArray();
+				for (int i = _sounds.Count - 1; i >= 0; i--)
+				{
+					StopSound(keys[i]);
+				}
 			}
 		}
 	}

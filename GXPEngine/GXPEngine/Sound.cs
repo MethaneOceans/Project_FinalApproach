@@ -17,6 +17,7 @@ namespace GXPEngine
 
         private IntPtr _id;
         private SoundSystem _system;
+		public SoundSystem System => _system;
 
         /// <summary>
         /// Creates a new <see cref="GXPEngine.Sound"/>.
