@@ -64,6 +64,7 @@ namespace GXPEngine
 			goalsCount = 0;
 
 			launchCharging = false;
+			launchPrism = false;
 
 			int maxBounces = 10;
 			int maxDepth = 5;
@@ -145,6 +146,13 @@ namespace GXPEngine
 				{
 					gameWon = true;
 					LevelWon();
+				}
+			}
+			else
+			{
+				if (!_sounds["victoryMusic"].channel.IsPlaying)
+				{
+					NextLevel();
 				}
 			}
 		}
@@ -261,6 +269,11 @@ namespace GXPEngine
 					StopSound(keys[i]);
 				}
 			}
+		}
+
+		protected virtual void NextLevel()
+		{
+			myGame.sceneManager.Reload();
 		}
 	}
 }

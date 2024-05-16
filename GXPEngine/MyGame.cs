@@ -8,8 +8,8 @@ using GXPEngine.Scenes;                           // System.Drawing contains dra
 /// This MyGame class only contains the scenemanager and setup for the scenemanager.
 /// The only available scenes are test scenes
 /// </summary>
-public class MyGame : Game {
-	private readonly SceneManager sceneManager;
+internal class MyGame : Game {
+	public readonly SceneManager sceneManager;
 	private readonly EasyDraw fpsCounter;
 
 	public float SoundVolume = 0.05f;
