@@ -45,6 +45,8 @@ namespace GXPEngine
 
 		private bool launchCharging;
 		private Timer launchTimer;
+		private bool launchPrism;
+
 		protected int prismsShot;
 		private int currentGoalsHit;
 		private int goalsCount;
@@ -119,6 +121,12 @@ namespace GXPEngine
 				currentGoalsHit = 0;
 				physics.Step();
 
+				if (launchPrism)
+				{
+					LaunchPrismAction();
+					launchPrism = false;
+				}
+
 				// Fire laser
 				if (Input.GetMouseButton(0))
 				{
@@ -172,16 +180,23 @@ namespace GXPEngine
 			launchTimer = new Timer((_) =>
 			{
 				launchCharging = false;
+				launchPrism = true;
+
 			}, null, 1000, Timeout.Infinite);
-		}
-		protected virtual void LaunchPrism()
-		{
-			OnPrismLaunched?.Invoke(this, new EventArgs());
 
 			Vector2 from = player.Position;
 			Vector2 to = Input.mousePos;
 
-			Vector2 velocity = (to - from) / 30;
+			LaunchPrismAction = () =>
+			{
+				LaunchPrism(from, to);
+			};
+		}
+		protected virtual void LaunchPrism(Vector2 from, Vector2 to)
+		{
+			OnPrismLaunched?.Invoke(this, new EventArgs());
+
+			Vector2 velocity = (to - from) / 50;
 			Prism newPrism = new Prism(player.Position, velocity, 2000);
 			allObjects.Add(newPrism);
 			physics.Add(newPrism.body);
@@ -214,6 +229,7 @@ namespace GXPEngine
 				else starGoal = prismsShot + 5;
 			}
 		}
+		private Action LaunchPrismAction;
 
 		public EventHandler OnLevelWon;
 		public EventHandler OnStarLost;
