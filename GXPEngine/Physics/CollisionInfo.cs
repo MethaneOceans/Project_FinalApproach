@@ -1,38 +1,15 @@
-﻿using static GXPEngine.Mathf;
-
-namespace GXPEngine.Physics
+﻿namespace GXPEngine.Physics
 {
-	internal struct CollisionInfo
+	public class CollisionInfo
 	{
-		public Collider thisCollider;
-		public Collider otherCollider;
-
 		public Vector2 Normal;
-		public float TimeOfImpact;
+		public float Depth;
 
-		public CollisionInfo(Collider thisCollider, Collider otherCollider, Vector2 Normal, float TimeOfImpact)
+		public CollisionInfo(Vector2 normal, float depth)
 		{
-			this.thisCollider = thisCollider;
-			this.otherCollider = otherCollider;
-			this.Normal = Normal;
-			this.TimeOfImpact = TimeOfImpact;
+			Normal = normal;
+			Depth = depth;
 		}
-
-		// Used for "empty" collisions
-		public static CollisionInfo Empty(Collider thisCollider)
-		{
-			return new CollisionInfo(thisCollider, null, new Vector2(), 1);
-		}
-		public bool IsValid()
-		{
-			if (thisCollider == null) return false;
-			if (otherCollider == null) return false;
-			if (Abs(Normal.LengthSquared() - 1.0f) > 0.01f) return false;
-			else return true;
-		}
-		public override string ToString()
-		{
-			return $"ThisCollider: {thisCollider}\nOtherCollider: {otherCollider}\nNormal: {Normal}\nTimeOfImpact: {TimeOfImpact}";
-		}
+		public CollisionInfo() : this(new Vector2(), -1000) { }
 	}
 }

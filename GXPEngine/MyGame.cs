@@ -9,13 +9,13 @@ using GXPEngine.Scenes;                           // System.Drawing contains dra
 /// The only available scenes are test scenes
 /// </summary>
 public class MyGame : Game {
-	private SceneManager sceneManager;
-	private EasyDraw fpsCounter;
+	private readonly SceneManager sceneManager;
+	private readonly EasyDraw fpsCounter;
 
-	public MyGame() : base(1200, 800, pFullScreen: false, pPixelArt: true)
+	public MyGame() : base(1600, 900, pFullScreen: false, pPixelArt: false)
 	{
 		sceneManager = new SceneManager(this);
-		sceneManager.AddScene("RayTest", new RayTest());
+		sceneManager.AddScene("Level0", new TestLevel());
 
 		targetFps = int.MaxValue;
 
@@ -23,7 +23,7 @@ public class MyGame : Game {
 		fpsCounter = new EasyDraw(200, 50);
 		fpsCounter.TextAlign(CenterMode.Min, CenterMode.Min);
 		AddChild(fpsCounter);
-		sceneManager.SwitchScene("RayTest");
+		sceneManager.SwitchScene("Level0");
 
 		Console.WriteLine("MyGame initialized");
 	}
@@ -38,51 +38,9 @@ public class MyGame : Game {
 
 	private void HandleInput()
 	{
-		if (Input.GetKeyDown(Key.R))
-		{
-			sceneManager.Reload();
-		}
+		if (Input.GetKeyDown(Key.R)) sceneManager.Reload();
 
-		if (Input.GetKeyDown(Key.ONE))
-		{
-			sceneManager.SwitchScene("RayTest");
-		}	  // PhysicsTrigger
-		if (Input.GetKeyDown(Key.TWO))
-		{
-			
-		}	  // CircleStep
-		if (Input.GetKeyDown(Key.THREE))
-		{
-			
-		}   // LineCollision
-		if (Input.GetKeyDown(Key.FOUR))
-		{
-			
-		}	// Moving circles
-		if (Input.GetKeyDown(Key.FIVE))
-		{
-			
-		}
-		if (Input.GetKeyDown(Key.SIX))
-		{
-
-		}
-		if (Input.GetKeyDown(Key.SEVEN))
-		{
-
-		}
-		if (Input.GetKeyDown(Key.EIGHT))
-		{
-
-		}
-		if (Input.GetKeyDown(Key.NINE))
-		{
-
-		}
-		if (Input.GetKeyDown(Key.ZERO))
-		{
-
-		}
+		if (Input.GetKeyDown(Key.ONE)) sceneManager.SwitchScene("Level0");
 	}
 	static void Main()
 	{

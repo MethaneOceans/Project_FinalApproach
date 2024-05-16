@@ -1,127 +1,140 @@
 ﻿using System.Collections.Generic;
-using static GXPEngine.Mathf;
+using System;
+using static GXPEngine.Physics.ACollider;
 
 namespace GXPEngine.Physics
 {
 	internal class PhysicsManager
 	{
-		Game game;
+		public List<ACollider> Objects => bodies;
 
-		private List<Collider> allColliders;
+		private readonly List<ACollider> bodies;
+		private readonly List<ACollider> staticColliders;
+		private readonly List<ACollider> triggerColliders;
+		private readonly List<ACollider> rigidColliders;
 
-		public Vector2 GlobalForce;
-		public float Bounciness = 0.65f;
+		private bool ActiveStep;
 
-		private EasyDraw PathTraceLayer;
-		public bool PathTraceEnabled;
-
-		public PhysicsManager(Game game)
+		public PhysicsManager()
 		{
-			this.game = game;
+			bodies = new List<ACollider>();
+			staticColliders = new List<ACollider>();
+			triggerColliders = new List<ACollider>();
+			rigidColliders = new List<ACollider>();
 
-			allColliders = new List<Collider>();
+			ActiveStep = false;
+		}
+		
+		public void Add(ACollider obj)
+		{
+			if (ActiveStep)
+			{
+				throw new InvalidOperationException("Currently running a step, cannot add object");
+			}
+			else
+			{
+				bodies.Add(obj);
 
-			PathTraceLayer = new EasyDraw(game.width, game.height);
-			PathTraceEnabled = false;
-			game.AddChild(PathTraceLayer);
+				if (obj.Behavior == ColliderType.Static) staticColliders.Add(obj);
+				else if (obj.Behavior == ColliderType.Rigid) rigidColliders.Add(obj);
+				else if (obj.Behavior == ColliderType.Trigger) triggerColliders.Add(obj);
+
+				obj.BehaviorChanged += BehaviorChangeHandler;
+			}
+		}
+		public void Remove(ACollider obj)
+		{
+			if (ActiveStep)
+			{
+				throw new InvalidOperationException("Currently running a step, cannot remove object");
+			}
+			else
+			{
+				bodies.Remove(obj);
+
+				if (obj.Behavior == ColliderType.Static) staticColliders.Remove(obj);
+				else if (obj.Behavior == ColliderType.Rigid) rigidColliders.Remove(obj);
+				else if (obj.Behavior == ColliderType.Trigger) triggerColliders.Remove(obj);
+
+				obj.BehaviorChanged -= BehaviorChangeHandler;
+			}
 		}
 
-		// Steps all objects by 1 frame
 		public void Step()
 		{
-			foreach (Collider mover in allColliders.FindAll(a => { return a.ColType == ColliderType.Rigid; }))
+			ActiveStep = true;
+
+			foreach (ACollider obj in rigidColliders)
 			{
-				// Update velocity and save position
-				mover.Velocity += GlobalForce;
-				mover.OldPosition = mover.Position;
-
-				// StepCollider takes a list of colliders to check with, this can be used for pruning a lot of colliders in advance
-				StepCollider(mover, allColliders.FindAll(col => { return col.ColType != ColliderType.Ghost; }));
+				Step(obj);
 			}
-		}
-		public void StepCollider(Collider col, ICollection<Collider> colliders, float dt = 1, int recursionCounter = 0)
-		{
-			// Try to move the object by it's velocity multiplied by the remaining time
-			col.Position += dt * col.Velocity;
-
-			List<Collider> overlaps = col.Overlaps(colliders);
-			if (overlaps.Count == 0) return;
-
-			// Get the collision info for collisions with the overlapping objects
-			CollisionInfo collision = col.EarliestCollision(overlaps);
-
-			// Object didnt move this frame
-			if (collision.TimeOfImpact < 0.0001f && recursionCounter == 0)
-			{
-				col.Position = col.OldPosition;
-				return;
-			}
-
-			// Make sure the TOI is limited between 0 and the remaining time
-			collision.TimeOfImpact = Clamp(collision.TimeOfImpact, 0, dt);
-
-			ResolveCollision(collision);
-			float remaining_dt = dt - collision.TimeOfImpact;
 			
-			// If the time left is close to zero it has no use to continue.
-			if (remaining_dt > 0.01f && recursionCounter < 10)
-			{
-				StepCollider(col, colliders, remaining_dt, recursionCounter + 1);
-			}
+			ActiveStep = false;
 		}
 
-		// Resolves a collision based on the supplied collisionInfo
-		public void ResolveCollision(CollisionInfo collision)
+		private void Step(ACollider obj)
 		{
-			Collider thisCol = collision.thisCollider;
-			Collider otherCol = collision.otherCollider;
-
-			// Invoke the collision event of the collider if it is bound
-			thisCol.Owner?.InvokeCollision(this, collision);
-
-			// Destructure the collision info and calculate the tangent vector
-			Vector2 normal = collision.Normal;
-			float toi = collision.TimeOfImpact;
-			toi = Clamp(toi, 0, 1);
-			Vector2 tangent = normal.Normal();
-
-			thisCol.Position = thisCol.OldPosition + toi * thisCol.Velocity;
-
-			// Get speed along the normal and tangent of collision
-			float p_this = Vector2.Dot(tangent, thisCol.Velocity);
-			float q_this = Vector2.Dot(normal, thisCol.Velocity);
-
-			// Can't resolve for other object if it's static or non existent
-			if (otherCol == null || otherCol.Static)
+			if (obj.Behavior == ColliderType.Rigid)
 			{
-				thisCol.Velocity = p_this * tangent - q_this * normal;
-				return;
+				Step_Triggers(obj);
+
+				// Copied from ACollider
+				obj.Angle += 3;
+				obj.Velocity += new Vector2(0, 0.2);
+				obj.Position += obj.Velocity;
+
+				bool collided = false;
+				CollisionInfo bestCol = new CollisionInfo();
+
+				foreach (ACollider collider in bodies)
+				{
+					if (collider == obj || collider.Behavior == ColliderType.Trigger) continue;
+					if (obj.Overlapping(collider))
+					{
+						CollisionInfo colInfo = obj.LastCollision;
+						if (colInfo.Depth > bestCol.Depth)
+						{
+							bestCol = colInfo;
+						}
+						collided = true;
+					}
+				}
+				if (collided)
+				{
+					obj.Position -= bestCol.Normal * bestCol.Depth;
+
+					Vector2 q = Vector2.Dot(bestCol.Normal, obj.Velocity) * bestCol.Normal;
+					obj.Velocity -= (2 * 0.9f) * q;
+				}
+
+				obj.Owner.Position = obj.Position;
+				obj.Owner.Rotation = obj.Angle;
 			}
-
-			// Invoke the collision event of the collider if it is bound
-			otherCol.Owner?.InvokeCollision(this, collision);
-
-			// Get speed along the normal and tangent of collision
-			float p_other = Vector2.Dot(tangent, otherCol.Velocity);
-			float q_other = Vector2.Dot(normal, otherCol.Velocity);
-
-			// Get the momentum in along the q component
-			float q_momentum = q_this * thisCol.Mass + q_other * otherCol.Mass;
-			float q_com = q_momentum / (thisCol.Mass + otherCol.Mass);
-
-			// Get the velocities along p and q. p only with the bounciness. q changes according to the momentum of both objects
-			float p_result_this = Bounciness * p_this;
-			float q_result_this = q_com - Bounciness * (q_this - q_com);
-			Vector2 thisNewV = p_result_this * tangent + q_result_this * normal;
-			float p_result_other = Bounciness * p_other;
-			float q_result_other = q_com - Bounciness * (q_other - q_com);
-			Vector2 otherNewV = p_result_other * tangent + q_result_other * normal;
-
-			thisCol.Velocity = thisNewV;
-			otherCol.Velocity = otherNewV;
+		}
+		private void Step_Triggers(ACollider obj)
+		{
+			foreach (ACollider trigger in triggerColliders)
+			{
+				if (obj.Overlapping(trigger))
+				{
+					// Should apply forces
+					trigger.TriggerMethod(trigger, obj);
+				}
+			}
 		}
 
-		public void AddCollider(Collider collider) => allColliders.Add(collider);
-		public bool RemoveCollider(Collider collider) => allColliders.Remove(collider);
+		private void BehaviorChangeHandler(object sender, BehaviorChangeEvent args)
+		{
+			ColliderType oldB = args.OldBehavior;
+			ColliderType newB = args.NewBehavior;
+
+			if (oldB == ColliderType.Rigid) rigidColliders.Remove((ACollider)sender);
+			else if (oldB == ColliderType.Trigger) triggerColliders.Remove((ACollider)sender);
+			else if (oldB == ColliderType.Rigid) rigidColliders.Remove((ACollider)sender);
+
+			if (newB == ColliderType.Rigid) rigidColliders.Add((ACollider)sender);
+			else if (newB == ColliderType.Trigger) triggerColliders.Add((ACollider)sender);
+			else if (newB == ColliderType.Rigid) rigidColliders.Add((ACollider)sender);
+		}
 	}
 }

@@ -22,8 +22,10 @@ namespace GXPEngine.Control
             height = myGame.height;
         }
 
-        // Used for initializing game objects, method is required to reload the scene
-        public virtual void Initialize()
+		/// <summary>
+		/// Acts like the constructor without creating a new scene object. Put all object initializers in this method since children of the scene get removed when reloading.
+		/// </summary>
+		public virtual void Initialize()
         {
             // To initialize or rather, reinitialize all child objects have to be removed or reset to their original values.
             // It is to the inherited scene object to decide wether to call the base method or reset the child objects
