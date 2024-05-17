@@ -11,22 +11,29 @@ using GXPEngine.Scenes;                           // System.Drawing contains dra
 internal class MyGame : Game {
 	public readonly SceneManager sceneManager;
 	private readonly EasyDraw fpsCounter;
+    Sprite bg;
 
-	public float SoundVolume = 0.05f;
+    public float SoundVolume = 0.05f;
 
 	public MyGame() : base(1600, 900, pFullScreen: false, pPixelArt: false)
 	{
-		sceneManager = new SceneManager(this);
+        bg = new Sprite("bg.png");
+        sceneManager = new SceneManager(this);
 		sceneManager.AddScene("Level0", new TestLevel());
-		sceneManager.AddScene("NineSlice", new NineSliceTest());
+		//sceneManager.AddScene("NineSlice", new NineSliceTest());
+        sceneManager.AddScene("Level1", new LevelOne());
+        sceneManager.AddScene("Level2", new LevelTwo());
+        sceneManager.AddScene("Level3", new LevelThree());
+        this.AddChild(bg);
 
-		targetFps = int.MaxValue;
+        targetFps = int.MaxValue;
 
 		// Show the fps
 		fpsCounter = new EasyDraw(200, 50);
 		fpsCounter.TextAlign(CenterMode.Min, CenterMode.Min);
 		AddChild(fpsCounter);
-		sceneManager.SwitchScene("Level0");
+		sceneManager.SwitchScene("Level1");
+
 
 		Console.WriteLine("MyGame initialized");
 	}
@@ -43,9 +50,14 @@ internal class MyGame : Game {
 	{
 		if (Input.GetKeyDown(Key.R)) sceneManager.Reload();
 
-		if (Input.GetKeyDown(Key.ONE)) sceneManager.SwitchScene("Level0");
-		if (Input.GetKeyDown(Key.TWO)) sceneManager.SwitchScene("NineSlice");
-	}
+		//if (Input.GetKeyDown(Key.ONE)) sceneManager.SwitchScene("Level0");
+		//if (Input.GetKeyDown(Key.TWO)) sceneManager.SwitchScene("NineSlice");
+        if (Input.GetKeyDown(Key.ONE)) sceneManager.SwitchScene("Level1");
+
+        if (Input.GetKeyDown(Key.TWO)) sceneManager.SwitchScene("Level2");
+
+        if (Input.GetKeyDown(Key.THREE)) sceneManager.SwitchScene("Level3");
+    }
 	static void Main()
 	{
 		new MyGame().Start();

@@ -150,10 +150,10 @@ namespace GXPEngine
 			}
 			else
 			{
-				if (!_sounds["victoryMusic"].channel.IsPlaying)
-				{
-					NextLevel();
-				}
+				//if (!_sounds["victoryMusic"].channel.IsPlaying)
+				//{
+				//	NextLevel();
+				//}
 			}
 		}
 
@@ -181,7 +181,7 @@ namespace GXPEngine
 			{
 				launchCharging = false;
 				launchPrism = true;
-			}, null, 1000, Timeout.Infinite);
+			}, null, 500, Timeout.Infinite);
 
 			Vector2 from = player.Position;
 			Vector2 to = Input.mousePos;
@@ -195,7 +195,7 @@ namespace GXPEngine
 		{
 			OnPrismLaunched?.Invoke(this, new EventArgs());
 
-			Vector2 velocity = (to - from) / 50;
+			Vector2 velocity = (to - from) / 30;
 			Prism newPrism = new Prism(player.Position, velocity, 2000);
 			allObjects.Add(newPrism);
 			physics.Add(newPrism.body);

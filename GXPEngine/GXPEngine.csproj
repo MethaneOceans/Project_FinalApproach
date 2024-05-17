@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameElements\Balloon.cs" />
     <Compile Include="NineSlice.cs" />
     <Compile Include="GameElements\LaserObjects\Beam.cs" />
     <Compile Include="GameElements\Block.cs" />
@@ -107,6 +108,9 @@
     <Compile Include="Physics\Ray.cs" />
     <Compile Include="Physics\PhysicsObject.cs" />
     <Compile Include="GameElements\Prism.cs" />
+    <Compile Include="Scenes\LevelOne.cs" />
+    <Compile Include="Scenes\LevelThree.cs" />
+    <Compile Include="Scenes\LevelTwo.cs" />
     <Compile Include="Scenes\NineSliceTest.cs" />
     <Compile Include="Scenes\TestLevel.cs" />
     <Compile Include="Scenes\Unused\CircleTest.cs" />

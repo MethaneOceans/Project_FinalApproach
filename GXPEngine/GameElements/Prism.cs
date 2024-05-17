@@ -11,7 +11,7 @@ namespace GXPEngine
 		private readonly Stopwatch stopwatch;
 		private readonly float TimeToLive = 1000;
 
-		public Prism(Vector2 position, Vector2 velocity) : base("Textures/square.png")
+		public Prism(Vector2 position, Vector2 velocity) : base("Textures/prism.png")
 		{
 			body = new OBCollider(position, new Vector2(sprite.width, sprite.height), 0, this)
 			{
@@ -24,7 +24,7 @@ namespace GXPEngine
 			stopwatch = new Stopwatch();
 			stopwatch.Start();
 		}
-		public Prism(Vector2 position, Vector2 velocity, float timeToLive) : base("Textures/square.png")
+		public Prism(Vector2 position, Vector2 velocity, float timeToLive) : base("Textures/prism.png")
 		{
 			body = new OBCollider(position, new Vector2(sprite.width, sprite.height), 0, this)
 			{
